@@ -9,7 +9,15 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MenuService {
-  private final MenuRepository repository;
+  private MenuRepository repository;
+  private MenuService instance;
+
+  public static MenuService getInstance() {
+    if (instance == null) {
+      instance = new MenuService();
+    }
+    return instance;
+  }
 
   public MenuService() {
     this.repository = MenuRepository.getInstance();

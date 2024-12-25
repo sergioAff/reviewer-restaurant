@@ -5,7 +5,15 @@ import org.example.models.Review;
 import org.example.repositories.RestaurantReviewRepository;
 
 public class RestaurantReviewService {
-  private final RestaurantReviewRepository repository;
+  private RestaurantReviewRepository repository;
+  private RestaurantReviewService instance;
+
+  public static RestaurantReviewService getInstance() {
+    if (instance == null) {
+      instance = new RestaurantReviewService();
+    }
+    return instance;
+  }
 
   public RestaurantReviewService() {
     this.repository = RestaurantReviewRepository.getInstance();

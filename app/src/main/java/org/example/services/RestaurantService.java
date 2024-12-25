@@ -7,7 +7,15 @@ import java.util.Map;
 import java.util.Optional;
 
 public class RestaurantService {
-  private final RestauranteRepository repository;
+  private RestauranteRepository repository;
+  private static RestaurantService instance;
+
+  public static RestaurantService getInstance() {
+    if (instance == null) {
+      instance = new RestaurantService();
+    }
+    return instance;
+  }
 
   public RestaurantService() {
     this.repository = RestauranteRepository.getInstance();
