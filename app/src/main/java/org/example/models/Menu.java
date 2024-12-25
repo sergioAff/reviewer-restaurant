@@ -3,15 +3,13 @@ package org.example.models;
 public class Menu {
   private Restaurant restaurant;
   private Dish[] dishes;
-  private String[] categories;
 
   public Menu() {
   }
 
-  public Menu(Restaurant restaurant, Dish[] dishes, String[] categories) {
+  public Menu(Restaurant restaurant, Dish[] dishes) {
     this.restaurant = restaurant;
     this.dishes = dishes;
-    this.categories = categories;
   }
 
   public Restaurant getRestaurant() {
@@ -28,13 +26,5 @@ public class Menu {
 
   public void setDishes(Dish[] dishes) {
     this.dishes = dishes;
-  }
-
-  public String[] getCategories() {
-    return categories;
-  }
-
-  public void setCategories(String[] categories) {
-    this.categories = categories;
   }
 }
