@@ -1,41 +1,35 @@
 package org.example.services;
 
-import org.example.models.Restaurant;
-import org.example.repositories.RestaurantRepository;
+import org.example.models.RestaurantModel;
+import org.example.repositories.DataRepository;
 
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class RestaurantService {
-  private RestaurantRepository repository;
-  private static RestaurantService instance;
-
-  public static RestaurantService getInstance() {
-    if (instance == null) {
-      instance = new RestaurantService();
-    }
-    return instance;
-  }
+  private DataRepository repository;
 
   public RestaurantService() {
-    this.repository = RestaurantRepository.getInstance();
+    this.repository = DataRepository.getInstance();
   }
 
-  public Boolean addRestaurant(Restaurant restaurant) {
-    return repository.addRestaurant(restaurant);
+  public void createRestaurant(String name, String address, boolean isAvailable) {
+    RestaurantModel restaurant = new RestaurantModel(name, address, isAvailable);
+    repository.addRestaurant(restaurant);
   }
 
-  public Boolean updateRestaurant(Restaurant restaurant) {
-    return repository.updateRestaurant(restaurant);
+  public List<RestaurantModel> getAllRestaurants() {
+    return repository.getAllRestaurants();
   }
 
-  public Boolean deleteRestaurant(String name) {
-    return repository.deleteRestaurant(name);
+  public void updateRestaurant(String name, String newAddress, boolean newAvailability) {
+    RestaurantModel restaurant = repository.getRestaurant(name);
+    if (restaurant != null) {
+      restaurant.setAddress(newAddress);
+      restaurant.setAvailable(newAvailability);
+    }
   }
 
-  public Map<String, Restaurant> getAllRestaurants() {
-    return repository.getAllRestaurants().entrySet().stream()
-      .filter(entry -> entry.getValue().getCapacity() > 0)
-      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+  public void deleteRestaurant(String name) {
+    repository.removeRestaurant(name);
   }
 }

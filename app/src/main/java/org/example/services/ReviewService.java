@@ -1,42 +1,30 @@
 package org.example.services;
 
-import org.example.models.Restaurant;
-import org.example.models.Review;
-import org.example.repositories.ReviewRepository;
-
-import java.util.LinkedList;
-import java.util.OptionalDouble;
+import org.example.models.DishModel;
+import org.example.models.RestaurantModel;
+import org.example.repositories.DataRepository;
+import org.example.utils.ReviewFactory;
 
 public class ReviewService {
-  private static ReviewService instance;
-  private final ReviewRepository reviewRepository;
+  private DataRepository repository;
+  private ReviewFactory reviewFactory;
 
-  private ReviewService() {
-    this.reviewRepository = ReviewRepository.getInstance();
+  public ReviewService() {
+    this.repository = DataRepository.getInstance();
+    this.reviewFactory = new ReviewFactory();
   }
 
-  public static synchronized ReviewService getInstance() {
-    if (instance == null) {
-      instance = new ReviewService();
+  public void addReviewToRestaurant(String restaurantName, String reviewerName, int rating, String comment) {
+    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
+    if (restaurant != null) {
+      reviewFactory.createReview("Restaurant", reviewerName, rating, comment, restaurant);
     }
-    return instance;
   }
 
-  public void createReview(Restaurant restaurant, Double rating, String comment) {
-    Review review = new Review(restaurant, rating, comment);
-    reviewRepository.addReview(restaurant, review);
-  }
-
-  public LinkedList<Review> listReviews(Restaurant restaurant) {
-    return reviewRepository.getReviews(restaurant);
-  }
-
-  public double calculateAverageRating(Restaurant restaurant) {
-    LinkedList<Review> reviews = reviewRepository.getReviews(restaurant);
-    if (reviews == null || reviews.isEmpty()) {
-      return 0.0;
+  public void addReviewToDish(String dishName, String reviewerName, int rating, String comment) {
+    DishModel dish = repository.getDish(dishName);
+    if (dish != null) {
+      reviewFactory.createReview("Dish", reviewerName, rating, comment, dish);
     }
-    OptionalDouble average = reviews.stream().mapToDouble(Review::getRating).average();
-    return average.orElse(0.0);
   }
 }

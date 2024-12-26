@@ -4,35 +4,35 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MenuModel {
-  private LinkedList<DishModel> DishModeles;
-  private RestaurantModel RestaurantModel;
+  private LinkedList<DishModel> dishes;
+  private RestaurantModel restaurant;
 
-  public MenuModel(RestaurantModel RestaurantModel) {
-    this.DishModeles = new LinkedList<>();
-    this.RestaurantModel = RestaurantModel;
+  public MenuModel(RestaurantModel restaurant) {
+    this.dishes = new LinkedList<>();
+    this.restaurant = restaurant;
   }
 
-  public List<DishModel> getDish() {
-    return DishModeles;
+  public List<DishModel> getDishes() {
+    return dishes;
   }
 
-  public void setDish(LinkedList<DishModel> DishModeles) {
-    this.DishModeles = DishModeles;
+  public void setDishes(LinkedList<DishModel> dishes) {
+    this.dishes = dishes;
   }
 
   public RestaurantModel getRestaurant() {
-    return RestaurantModel;
+    return restaurant;
   }
 
-  public void setRestaurant(RestaurantModel RestaurantModel) {
-    this.RestaurantModel = RestaurantModel;
+  public void setRestaurant(RestaurantModel restaurant) {
+    this.restaurant = restaurant;
   }
 
-  public void addDish(DishModel DishModel) {
-    this.DishModeles.add(DishModel);
+  public void addDish(DishModel dish) {
+    this.dishes.add(dish);
   }
 
-  public void removeDish(DishModel DishModel) {
-    this.DishModeles.remove(DishModel);
+  public void removeDish(DishModel dish) {
+    this.dishes.remove(dish);
   }
 }

@@ -23,4 +23,3 @@ public class CreateRestaurantReviewCommand implements ICommand {
     restaurant.addReview(review);
   }
 }
-

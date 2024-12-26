@@ -1,34 +1,40 @@
 package org.example.models;
 
+import org.example.observable.Observable;
+import org.example.observable.Observer;
+
 import java.util.LinkedList;
 import java.util.List;
 
-public class RestaurantModel {
+public class RestaurantModel implements Observable {
   private String name;
   private String address;
-  private MenuModel MenuModel;
-  private LinkedList<RestaurantReviewModel> ReviewModels;
+  private MenuModel menu;
+  private LinkedList<RestaurantReviewModel> reviews;
   private double averageRating;
   private boolean isAvailable;
+  private List<Observer> observers;
 
-  public RestaurantModel(String name, String address, Boolean isAvailable) {
+  public RestaurantModel(String name, String address, boolean isAvailable) {
     this.name = name;
     this.address = address;
-    this.ReviewModels = new LinkedList<>();
+    this.reviews = new LinkedList<>();
     this.averageRating = 0.0;
-    this.isAvailable= isAvailable;
+    this.isAvailable = isAvailable;
+    this.observers = new LinkedList<>();
   }
 
   private void calculateAverageRating() {
-    if (ReviewModels.isEmpty()) {
+    if (reviews.isEmpty()) {
       this.averageRating = 0.0;
     } else {
       double sum = 0.0;
-      for (RestaurantReviewModel ReviewModel : ReviewModels) {
-        sum += ReviewModel.getRating();
+      for (RestaurantReviewModel review : reviews) {
+        sum += review.getRating();
       }
-      this.averageRating = sum / ReviewModels.size();
+      this.averageRating = sum / reviews.size();
     }
+    notifyObservers();
   }
 
   public String getName() {
@@ -48,19 +54,19 @@ public class RestaurantModel {
   }
 
   public MenuModel getMenu() {
-    return MenuModel;
+    return menu;
   }
 
-  public void setMenu(MenuModel MenuModel) {
-    this.MenuModel = MenuModel;
+  public void setMenu(MenuModel menu) {
+    this.menu = menu;
   }
 
-  public List<RestaurantReviewModel> getReview() {
-    return ReviewModels;
+  public List<RestaurantReviewModel> getReviews() {
+    return reviews;
   }
 
-  public void setReview(LinkedList<RestaurantReviewModel> ReviewModels) {
-    this.ReviewModels = ReviewModels;
+  public void setReviews(LinkedList<RestaurantReviewModel> reviews) {
+    this.reviews = reviews;
     calculateAverageRating();
   }
 
@@ -68,8 +74,8 @@ public class RestaurantModel {
     return averageRating;
   }
 
-  public void addReview(RestaurantReviewModel ReviewModel) {
-    this.ReviewModels.add(ReviewModel);
+  public void addReview(RestaurantReviewModel review) {
+    this.reviews.add(review);
     calculateAverageRating();
   }
 
@@ -81,4 +87,20 @@ public class RestaurantModel {
     this.isAvailable = isAvailable;
   }
 
+  @Override
+  public void addObserver(Observer observer) {
+    observers.add(observer);
+  }
+
+  @Override
+  public void removeObserver(Observer observer) {
+    observers.remove(observer);
+  }
+
+  @Override
+  public void notifyObservers() {
+    for (Observer observer : observers) {
+      observer.update();
+    }
+  }
 }

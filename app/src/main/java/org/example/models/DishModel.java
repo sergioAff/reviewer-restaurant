@@ -1,33 +1,39 @@
 package org.example.models;
 
+import org.example.observable.Observable;
+import org.example.observable.Observer;
+
 import java.util.LinkedList;
 import java.util.List;
 
-public class DishModel {
+public class DishModel implements Observable {
   private String name;
   private String description;
   private double price;
-  private LinkedList<DishReviewModel> ReviewModels;
+  private LinkedList<DishReviewModel> reviews;
   private double averageRating;
+  private List<Observer> observers;
 
   public DishModel(String name, String description, double price) {
     this.name = name;
     this.description = description;
     this.price = price;
-    this.ReviewModels = new LinkedList<>();
+    this.reviews = new LinkedList<>();
     this.averageRating = 0.0;
+    this.observers = new LinkedList<>();
   }
 
   private void calculateAverageRating() {
-    if (ReviewModels.isEmpty()) {
+    if (reviews.isEmpty()) {
       this.averageRating = 0.0;
     } else {
       double sum = 0.0;
-      for (DishReviewModel ReviewModel : ReviewModels) {
-        sum += ReviewModel.getRating();
+      for (DishReviewModel review : reviews) {
+        sum += review.getRating();
       }
-      this.averageRating = sum / ReviewModels.size();
+      this.averageRating = sum / reviews.size();
     }
+    notifyObservers();
   }
 
   public String getName() {
@@ -54,12 +60,12 @@ public class DishModel {
     this.price = price;
   }
 
-  public List<DishReviewModel> getReview() {
-    return ReviewModels;
+  public List<DishReviewModel> getReviews() {
+    return reviews;
   }
 
-  public void setReview(LinkedList<DishReviewModel> ReviewModels) {
-    this.ReviewModels = ReviewModels;
+  public void setReviews(LinkedList<DishReviewModel> reviews) {
+    this.reviews = reviews;
     calculateAverageRating();
   }
 
@@ -67,14 +73,30 @@ public class DishModel {
     return averageRating;
   }
 
-  public void addReview(DishReviewModel ReviewModel) {
-    this.ReviewModels.add(ReviewModel);
+  public void addReview(DishReviewModel review) {
+    this.reviews.add(review);
     calculateAverageRating();
   }
 
-  public void removeReview(ReviewModel ReviewModel) {
-    this.ReviewModels.remove(ReviewModel);
+  public void removeReview(DishReviewModel review) {
+    this.reviews.remove(review);
     calculateAverageRating();
   }
 
+  @Override
+  public void addObserver(Observer observer) {
+    observers.add(observer);
+  }
+
+  @Override
+  public void removeObserver(Observer observer) {
+    observers.remove(observer);
+  }
+
+  @Override
+  public void notifyObservers() {
+    for (Observer observer : observers) {
+      observer.update();
+    }
+  }
 }
