@@ -5,41 +5,47 @@ import org.example.models.Menu;
 import org.example.models.Restaurant;
 import org.example.repositories.MenuRepository;
 
-import java.util.Map;
+import java.util.LinkedList;
 import java.util.Optional;
 
 public class MenuService {
-  private MenuRepository repository;
-  private MenuService instance;
+  private static MenuService instance;
+  private final MenuRepository menuRepository;
 
-  public static MenuService getInstance() {
+  private MenuService() {
+    this.menuRepository = MenuRepository.getInstance();
+  }
+
+  public static synchronized MenuService getInstance() {
     if (instance == null) {
       instance = new MenuService();
     }
     return instance;
   }
 
-  public MenuService() {
-    this.repository = MenuRepository.getInstance();
+  public boolean associateMenuToRestaurant(Restaurant restaurant, Menu menu) {
+    menu.setRestaurant(restaurant);
+    return menuRepository.saveMenu(menu);
   }
 
-  public boolean saveMenu(Menu menu) {
-    return repository.saveMenu(menu);
+  public boolean addDishToMenu(Restaurant restaurant, Dish dish) {
+    Optional<Menu> menuOptional = menuRepository.getMenu(restaurant.getName());
+    if (menuOptional.isPresent()) {
+      Menu menu = menuOptional.get();
+      if (menu.getDishes() == null) {
+        menu.setDishes(new LinkedList<>());
+      }
+      menu.getDishes().add(dish);
+      return menuRepository.saveMenu(menu);
+    }
+    return false;
   }
 
-  public Optional<Menu> getMenu(Restaurant restaurant) {
-    return repository.getMenu(restaurant);
-  }
-
-  public boolean updateDishInMenu(Restaurant restaurant, Dish updatedDish) {
-    return repository.updateDishInMenu(restaurant, updatedDish);
+  public boolean editDishInMenu(Restaurant restaurant, Dish updatedDish) {
+    return menuRepository.updateDishInMenu(restaurant.getName(), updatedDish);
   }
 
   public boolean deleteDishFromMenu(Restaurant restaurant, String dishName) {
-    return repository.deleteDishFromMenu(restaurant, dishName);
-  }
-
-  public Map<Restaurant, Menu> getAllMenus() {
-    return repository.getAllMenus();
+    return menuRepository.deleteDishFromMenu(restaurant.getName(), dishName);
   }
 }

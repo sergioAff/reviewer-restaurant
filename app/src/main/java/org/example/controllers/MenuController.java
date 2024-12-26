@@ -4,42 +4,77 @@ import org.example.models.Dish;
 import org.example.models.Menu;
 import org.example.models.Restaurant;
 import org.example.services.MenuService;
-
-import java.util.Map;
-import java.util.Optional;
+import org.example.utils.ConsoleHandler;
 
 public class MenuController {
-  private MenuService service;
-  private static MenuController instance;
+  private final MenuService menuService;
+  private final ConsoleHandler consoleHandler;
 
   public MenuController() {
-    this.service = MenuService.getInstance();
+    this.menuService = MenuService.getInstance();
+    this.consoleHandler = new ConsoleHandler();
   }
 
-  public static MenuController getInstance() {
-    if (instance == null) {
-      instance = new MenuController();
+  public void associateMenuToRestaurant(Restaurant restaurant) {
+    consoleHandler.writeLine("Ingrese el nombre del menú a asociar:");
+    String menuName = consoleHandler.readLine();
+
+    Menu menu = new Menu();
+    menu.setRestaurant(restaurant);
+
+    if (menuService.associateMenuToRestaurant(restaurant, menu)) {
+      consoleHandler.writeLine("Menú asociado exitosamente al restaurante.");
+    } else {
+      consoleHandler.writeLine("Error al asociar el menú.");
     }
-    return instance;
   }
 
-  public boolean saveMenu(Menu menu) {
-    return service.saveMenu(menu);
+  public void addDishToMenu(Restaurant restaurant) {
+    consoleHandler.writeLine("Ingrese el nombre del plato:");
+    String dishName = consoleHandler.readLine();
+
+    consoleHandler.writeLine("Ingrese la descripción del plato:");
+    String dishDescription = consoleHandler.readLine();
+
+    consoleHandler.writeLine("Ingrese el precio del plato:");
+    double dishPrice = Double.parseDouble(consoleHandler.readLine());
+
+    Dish dish = new Dish(dishName, dishDescription, dishPrice);
+
+    if (menuService.addDishToMenu(restaurant, dish)) {
+      consoleHandler.writeLine("Plato agregado exitosamente al menú.");
+    } else {
+      consoleHandler.writeLine("Error al agregar el plato al menú.");
+    }
   }
 
-  public Optional<Menu> getMenu(Restaurant restaurant) {
-    return service.getMenu(restaurant);
+  public void editDishInMenu(Restaurant restaurant) {
+    consoleHandler.writeLine("Ingrese el nombre del plato a editar:");
+    String dishName = consoleHandler.readLine();
+
+    consoleHandler.writeLine("Ingrese la nueva descripción del plato:");
+    String dishDescription = consoleHandler.readLine();
+
+    consoleHandler.writeLine("Ingrese el nuevo precio del plato:");
+    double dishPrice = Double.parseDouble(consoleHandler.readLine());
+
+    Dish updatedDish = new Dish(dishName, dishDescription, dishPrice);
+
+    if (menuService.editDishInMenu(restaurant, updatedDish)) {
+      consoleHandler.writeLine("Plato editado exitosamente en el menú.");
+    } else {
+      consoleHandler.writeLine("Error al editar el plato en el menú.");
+    }
   }
 
-  public boolean updateDishInMenu(Restaurant restaurant, Dish updatedDish) {
-    return service.updateDishInMenu(restaurant, updatedDish);
-  }
+  public void deleteDishFromMenu(Restaurant restaurant) {
+    consoleHandler.writeLine("Ingrese el nombre del plato a eliminar:");
+    String dishName = consoleHandler.readLine();
 
-  public boolean deleteDishFromMenu(Restaurant restaurant, String dishName) {
-    return service.deleteDishFromMenu(restaurant, dishName);
-  }
-
-  public Map<Restaurant, Menu> getAllMenus() {
-    return service.getAllMenus();
+    if (menuService.deleteDishFromMenu(restaurant, dishName)) {
+      consoleHandler.writeLine("Plato eliminado exitosamente del menú.");
+    } else {
+      consoleHandler.writeLine("Error al eliminar el plato del menú.");
+    }
   }
 }

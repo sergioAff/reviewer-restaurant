@@ -5,13 +5,14 @@ import org.example.models.Menu;
 import org.example.models.Restaurant;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
 
 public class MenuRepository {
 
   private static MenuRepository instance;
-  private final Map<Restaurant, Menu> menus;
+  private final Map<String, Menu> menus;
 
   private MenuRepository() {
     menus = new HashMap<>();
@@ -25,48 +26,41 @@ public class MenuRepository {
   }
 
   public boolean saveMenu(Menu menu) {
-    if (menus.get(menu.getRestaurant()) != null) {
-      menus.put(menu.getRestaurant(), menu);
+    if (menus.get(menu.getRestaurant().getName()) == null) {
+      menus.put(menu.getRestaurant().getName(), menu);
       return true;
     }
     return false;
   }
 
-  public Optional<Menu> getMenu(Restaurant restaurant) {
-    return Optional.ofNullable(menus.get(restaurant));
-  }
-
-  public Boolean updateDishInMenu(Restaurant restaurant, Dish updatedDish) {
+  public Boolean updateDishInMenu(String restaurant, Dish updatedDish) {
    if ( menus.get(restaurant) != null ) {
-     Dish[] dishes = menus.get(restaurant).getDishes();
-     for (int i = 0; i < dishes.length; i++) {
-       if (dishes[i].getName().equals(updatedDish.getName())) {
-         dishes[i] = updatedDish;
-         return true;
-       }
-     }
+     LinkedList<Dish> dishes = menus.get(restaurant).getDishes();
+      for (Dish dish : dishes) {
+        if (dish.getName().equals(updatedDish.getName())) {
+          dish.setPrice(updatedDish.getPrice());
+          dish.setDescription(updatedDish.getDescription());
+          return true;
+        }
+      }
    }
    return false;
   }
 
-  public Boolean deleteDishFromMenu(Restaurant restaurant, String dishName) {
+  public Boolean deleteDishFromMenu(String restaurant, String dishName) {
     if (menus.get(restaurant) != null) {
-      Dish[] dishes = menus.get(restaurant).getDishes();
-      Dish[] newDishes = new Dish[dishes.length - 1];
-      int index = 0;
+      LinkedList<Dish> dishes = menus.get(restaurant).getDishes();
       for (Dish dish : dishes) {
-        if (!dish.getName().equals(dishName)) {
-          newDishes[index] = dish;
-          index++;
+        if (dish.getName().equals(dishName)) {
+          dishes.remove(dish);
+          return true;
         }
       }
-      menus.get(restaurant).setDishes(newDishes);
-      return true;
     }
     return false;
   }
 
-  public Map<Restaurant, Menu> getAllMenus() {
-    return new HashMap<>(menus);
+  public Optional<Menu> getMenu(String restaurant) {
+    return Optional.ofNullable(menus.get(restaurant));
   }
 }

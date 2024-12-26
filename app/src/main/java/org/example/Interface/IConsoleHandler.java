@@ -1,4 +1,4 @@
-package org.example.utils;
+package org.example.Interface;
 
 public interface IConsoleHandler {
   String readLine();

@@ -3,34 +3,29 @@ package org.example.repositories;
 import org.example.models.Restaurant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-public class RestauranteRepository {
-  private static RestauranteRepository instance;
+public class RestaurantRepository {
+  private static RestaurantRepository instance;
   private Map<String, Restaurant> restaurants;
 
-  private RestauranteRepository() {
+  private RestaurantRepository() {
     this.restaurants = new HashMap<>();
   }
 
-  public static synchronized RestauranteRepository getInstance() {
+  public static synchronized RestaurantRepository getInstance() {
     if (instance == null) {
-      instance = new RestauranteRepository();
+      instance = new RestaurantRepository();
     }
     return instance;
   }
 
   public Boolean addRestaurant(Restaurant restaurant) {
     String restaurantName=restaurant.getName();
-    if ( restaurants.get(restaurantName) !=null ) {
+    if ( restaurants.get(restaurantName) == null ) {
       restaurants.put(restaurantName, restaurant);
       return true;
     }
     return false;
-  }
-
-  public Optional<Restaurant> getRestaurant(String name) {
-    return Optional.ofNullable(restaurants.get(name));
   }
 
   public Map<String, Restaurant> getAllRestaurants() {

@@ -1,8 +1,10 @@
 package org.example.utils;
 
+import org.example.Interface.IConsoleHandler;
+
 import java.util.Scanner;
 
-public class ConsoleHandler implements IConsoleHandler{
+public class ConsoleHandler implements IConsoleHandler {
 
   private final Scanner scanner;
 

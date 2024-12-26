@@ -1,13 +1,13 @@
 package org.example.services;
 
 import org.example.models.Restaurant;
-import org.example.repositories.RestauranteRepository;
+import org.example.repositories.RestaurantRepository;
 
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RestaurantService {
-  private RestauranteRepository repository;
+  private RestaurantRepository repository;
   private static RestaurantService instance;
 
   public static RestaurantService getInstance() {
@@ -18,26 +18,24 @@ public class RestaurantService {
   }
 
   public RestaurantService() {
-    this.repository = RestauranteRepository.getInstance();
+    this.repository = RestaurantRepository.getInstance();
   }
 
-  public boolean addRestaurant(Restaurant restaurant) {
+  public Boolean addRestaurant(Restaurant restaurant) {
     return repository.addRestaurant(restaurant);
   }
 
-  public Optional<Restaurant> getRestaurant(String name) {
-    return repository.getRestaurant(name);
-  }
-
-  public Map<String, Restaurant> getAllRestaurants() {
-    return repository.getAllRestaurants();
-  }
-
-  public boolean updateRestaurant(Restaurant restaurant) {
+  public Boolean updateRestaurant(Restaurant restaurant) {
     return repository.updateRestaurant(restaurant);
   }
 
-  public boolean deleteRestaurant(String name) {
+  public Boolean deleteRestaurant(String name) {
     return repository.deleteRestaurant(name);
+  }
+
+  public Map<String, Restaurant> getAllRestaurants() {
+    return repository.getAllRestaurants().entrySet().stream()
+      .filter(entry -> entry.getValue().getCapacity() > 0)
+      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 }
