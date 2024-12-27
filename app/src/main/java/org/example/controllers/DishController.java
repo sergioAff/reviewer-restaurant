@@ -2,61 +2,70 @@ package org.example.controllers;
 
 import org.example.models.DishModel;
 import org.example.models.DishReviewModel;
-import org.example.repositories.DataRepository;
-import org.example.utils.ReviewFactory;
+import org.example.observable.Observable;
+import org.example.observable.Observer;
+import org.example.services.DishService;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DishController {
-  private DataRepository repository;
-  private ReviewFactory reviewFactory;
+public class DishController implements Observable {
+  private final DishService dishService;
+  private final List<Observer> observers;
 
   public DishController() {
-    this.repository = DataRepository.getInstance();
-    this.reviewFactory = new ReviewFactory();
+    this.dishService = new DishService();
+    this.observers = new ArrayList<>();
   }
 
   public void createDish(String name, String description, double price) {
-    DishModel dish = new DishModel(name, description, price);
-    repository.addDish(dish);
+    dishService.createDish(name, description, price);
+    notifyObservers();
   }
 
   public List<DishModel> getAllDishes() {
-    return repository.getAllDishes();
+    return dishService.getAllDishes();
   }
 
   public void updateDish(String name, String newDescription, double newPrice) {
-    DishModel dish = repository.getDish(name);
-    if (dish != null) {
-      dish.setDescription(newDescription);
-      dish.setPrice(newPrice);
-    }
+    dishService.updateDish(name, newDescription, newPrice);
+    notifyObservers();
   }
 
   public void deleteDish(String name) {
-    repository.removeDish(name);
+    dishService.deleteDish(name);
+    notifyObservers();
   }
 
   public void addReviewToDish(String dishName, String reviewerName, int rating, String comment) {
-    DishModel dish = repository.getDish(dishName);
-    if (dish != null) {
-      reviewFactory.createReview("Dish", reviewerName, rating, comment, dish);
-    }
+    dishService.addReviewToDish(dishName, reviewerName, rating, comment);
+    notifyObservers();
   }
 
   public List<DishReviewModel> getReviewsOfDish(String dishName) {
-    DishModel dish = repository.getDish(dishName);
-    if (dish != null) {
-      return dish.getReviews();
-    }
-    return null;
+    return dishService.getReviewsOfDish(dishName);
   }
 
   public double getAverageRatingOfDish(String dishName) {
-    DishModel dish = repository.getDish(dishName);
-    if (dish != null) {
-      return dish.getAverageRating();
+    return dishService.getAverageRatingOfDish(dishName);
+  }
+
+
+
+  @Override
+  public void addObserver(Observer observer) {
+    observers.add(observer);
+  }
+
+  @Override
+  public void removeObserver(Observer observer) {
+    observers.remove(observer);
+  }
+
+  @Override
+  public void notifyObservers() {
+    for (Observer observer : observers) {
+      observer.update("Dish updated");
     }
-    return 0.0;
   }
 }

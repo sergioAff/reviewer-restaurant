@@ -1,21 +1,22 @@
 package org.example.services;
 
 import org.example.models.DishModel;
+import org.example.models.DishReviewModel;
 import org.example.repositories.DataRepository;
+import org.example.utils.ReviewFactory;
 
 import java.util.List;
 
 public class DishService {
-  private DataRepository repository;
+  private final DataRepository repository;
+  private final ReviewFactory reviewFactory;
 
   public DishService() {
     this.repository = DataRepository.getInstance();
+    this.reviewFactory = new ReviewFactory();
   }
 
   public void createDish(String name, String description, double price) {
-    if (repository.getDish(name) != null) {
-      throw new IllegalArgumentException("Dish with this name already exists.");
-    }
     DishModel dish = new DishModel(name, description, price);
     repository.addDish(dish);
   }
@@ -26,17 +27,30 @@ public class DishService {
 
   public void updateDish(String name, String newDescription, double newPrice) {
     DishModel dish = repository.getDish(name);
-    if (dish == null) {
-      throw new IllegalArgumentException("Dish not found.");
+    if (dish != null) {
+      dish.setDescription(newDescription);
+      dish.setPrice(newPrice);
     }
-    dish.setDescription(newDescription);
-    dish.setPrice(newPrice);
   }
 
   public void deleteDish(String name) {
-    if (repository.getDish(name) == null) {
-      throw new IllegalArgumentException("Dish not found.");
-    }
     repository.removeDish(name);
+  }
+
+  public void addReviewToDish(String dishName, String reviewerName, int rating, String comment) {
+    DishModel dish = repository.getDish(dishName);
+    if (dish != null) {
+      reviewFactory.createReview("Dish", reviewerName, rating, comment, dish);
+    }
+  }
+
+  public List<DishReviewModel> getReviewsOfDish(String dishName) {
+    DishModel dish = repository.getDish(dishName);
+    return dish != null ? dish.getReviews() : null;
+  }
+
+  public double getAverageRatingOfDish(String dishName) {
+    DishModel dish = repository.getDish(dishName);
+    return dish != null ? dish.getAverageRating() : 0.0;
   }
 }

@@ -1,12 +1,9 @@
 package org.example.models;
 
-import org.example.observable.Observable;
-import org.example.observable.Observer;
-
 import java.util.LinkedList;
 import java.util.List;
 
-public class RestaurantModel extends Observable {
+public class RestaurantModel {
   private String name;
   private String address;
   private MenuModel menu;
@@ -32,7 +29,6 @@ public class RestaurantModel extends Observable {
       }
       this.averageRating = sum / reviews.size();
     }
-    notifyObservers("The average rating for " + name + " is now: " + averageRating);
   }
 
   public void addReview(RestaurantReviewModel review) {
@@ -48,7 +44,6 @@ public class RestaurantModel extends Observable {
     this.isAvailable = isAvailable;
   }
 
-  // Getters and Setters
   public String getName() {
     return name;
   }
@@ -80,4 +75,5 @@ public class RestaurantModel extends Observable {
   public double getAverageRating() {
     return averageRating;
   }
+
 }

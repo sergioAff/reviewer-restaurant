@@ -2,46 +2,34 @@ package org.example.controllers;
 
 import org.example.models.DishModel;
 import org.example.models.MenuModel;
-import org.example.models.RestaurantModel;
-import org.example.repositories.DataRepository;
+import org.example.services.MenuService;
+
+import java.util.List;
 
 public class MenuController {
-  private DataRepository repository;
+  private final MenuService menuService;
 
   public MenuController() {
-    this.repository = DataRepository.getInstance();
+    this.menuService = new MenuService();
   }
 
-  public void associateMenuToRestaurant(String restaurantName, MenuModel menu) {
-    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null) {
-      restaurant.setMenu(menu);
-      menu.setRestaurant(restaurant);
-    }
+  public void associateMenuToRestaurant(String restaurantName) {
+    menuService.createMenuForRestaurant(restaurantName);
   }
 
   public void addDishToMenu(String restaurantName, DishModel dish) {
-    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null && restaurant.getMenu() != null) {
-      restaurant.getMenu().addDish(dish);
-    }
+    menuService.addDishToMenu(restaurantName, dish);
   }
 
   public void removeDishFromMenu(String restaurantName, String dishName) {
-    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null && restaurant.getMenu() != null) {
-      DishModel dish = repository.getDish(dishName);
-      if (dish != null) {
-        restaurant.getMenu().removeDish(dish);
-      }
-    }
+    menuService.removeDishFromMenu(restaurantName, dishName);
   }
 
   public MenuModel getMenuOfRestaurant(String restaurantName) {
-    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null) {
-      return restaurant.getMenu();
-    }
-    return null;
+    return menuService.getMenuOfRestaurant(restaurantName);
+  }
+
+  public List<DishModel> getDishesInMenu(String restaurantName) {
+    return menuService.getDishesInMenu(restaurantName);
   }
 }

@@ -1,4 +1,4 @@
-package org.example.utils;
+package org.example.commands.Menu;
 
 import org.example.Interface.ICommand;
 import org.example.models.DishModel;

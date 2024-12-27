@@ -12,6 +12,15 @@ public class MenuModel {
     this.restaurant = restaurant;
   }
 
+  public DishModel findDishByName(String name) {
+    for (DishModel dish : dishes) {
+      if (dish.getName().equalsIgnoreCase(name)) {
+        return dish;
+      }
+    }
+    return null;
+  }
+
   public List<DishModel> getDishes() {
     return dishes;
   }
@@ -34,14 +43,5 @@ public class MenuModel {
 
   public void removeDish(DishModel dish) {
     this.dishes.remove(dish);
-  }
-
-  public DishModel findDishByName(String name) {
-    for (DishModel dish : dishes) {
-      if (dish.getName().equalsIgnoreCase(name)) {
-        return dish;
-      }
-    }
-    return null;
   }
 }

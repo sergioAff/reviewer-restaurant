@@ -1,41 +1,33 @@
 package org.example.controllers;
 
-import org.example.models.DishModel;
 import org.example.models.DishReviewModel;
-import org.example.repositories.DataRepository;
-import org.example.utils.ReviewFactory;
+import org.example.services.ReviewService;
 
 import java.util.List;
 
 public class DishReviewController {
-  private DataRepository repository;
-  private ReviewFactory reviewFactory;
+  private final ReviewService reviewService;
 
   public DishReviewController() {
-    this.repository = DataRepository.getInstance();
-    this.reviewFactory = new ReviewFactory();
+    this.reviewService = new ReviewService();
   }
 
   public void addReviewToDish(String dishName, String reviewerName, int rating, String comment) {
-    DishModel dish = repository.getDish(dishName);
-    if (dish != null) {
-      reviewFactory.createReview("Dish", reviewerName, rating, comment, dish);
-    }
+    reviewService.addReviewToDish(dishName, reviewerName, rating, comment);
   }
 
   public List<DishReviewModel> getReviewsOfDish(String dishName) {
-    DishModel dish = repository.getDish(dishName);
-    if (dish != null) {
-      return dish.getReviews();
-    }
-    return null;
+    return reviewService.getReviewsForDish(dishName);
   }
 
   public double getAverageRatingOfDish(String dishName) {
-    DishModel dish = repository.getDish(dishName);
-    if (dish != null) {
-      return dish.getAverageRating();
+    List<DishReviewModel> reviews = getReviewsOfDish(dishName);
+    if (reviews == null || reviews.isEmpty()) {
+      return 0.0;
     }
-    return 0.0;
+    return reviews.stream()
+      .mapToInt(DishReviewModel::getRating)
+      .average()
+      .orElse(0.0);
   }
 }

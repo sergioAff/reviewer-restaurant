@@ -1,6 +1,8 @@
 package org.example.utils;
 
 import org.example.Interface.ICommand;
+import org.example.commands.Menu.CreateDishReviewCommand;
+import org.example.commands.Restaurants.CreateRestaurantReviewCommand;
 import org.example.models.DishModel;
 import org.example.models.RestaurantModel;
 

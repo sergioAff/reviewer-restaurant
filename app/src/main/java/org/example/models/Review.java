@@ -1,5 +1,6 @@
 package org.example.models;
 
+
 public abstract class Review {
   private String reviewerName;
   private int rating;

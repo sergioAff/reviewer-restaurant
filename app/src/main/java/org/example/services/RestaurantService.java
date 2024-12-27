@@ -6,7 +6,7 @@ import org.example.repositories.DataRepository;
 import java.util.List;
 
 public class RestaurantService {
-  private DataRepository repository;
+  private final DataRepository repository;
 
   public RestaurantService() {
     this.repository = DataRepository.getInstance();
@@ -31,6 +31,7 @@ public class RestaurantService {
     }
     restaurant.setAddress(newAddress);
     restaurant.setAvailable(newAvailability);
+    repository.updateRestaurant(restaurant);
   }
 
   public void deleteRestaurant(String name) {

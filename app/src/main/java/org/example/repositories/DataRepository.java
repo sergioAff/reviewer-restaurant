@@ -3,35 +3,46 @@ package org.example.repositories;
 import org.example.models.DishModel;
 import org.example.models.RestaurantModel;
 import org.example.models.Review;
-import org.example.observable.Observer;
 
 import java.util.*;
 
 public class DataRepository {
+
   private static DataRepository instance;
 
-  private Map<String, RestaurantModel> restaurants;
-  private Map<String, DishModel> dishes;
-  private List<Review> reviews;
-  private List<Observer> observers;
+  private final Map<String, RestaurantModel> restaurants;
+  private final Map<String, DishModel> dishes;
+  private final List<Review> reviews;
 
   private DataRepository() {
     this.restaurants = new HashMap<>();
     this.dishes = new HashMap<>();
     this.reviews = new LinkedList<>();
-    this.observers = new LinkedList<>();
   }
 
-  public static synchronized DataRepository getInstance() {
+  public static DataRepository getInstance() {
     if (instance == null) {
-      instance = new DataRepository();
+      synchronized (DataRepository.class) {
+        if (instance == null) {
+          instance = new DataRepository();
+        }
+      }
     }
     return instance;
   }
 
   public void addRestaurant(RestaurantModel restaurant) {
+    Objects.requireNonNull(restaurant, "Restaurant cannot be null.");
     if (restaurants.containsKey(restaurant.getName())) {
       throw new IllegalArgumentException("Restaurant already exists: " + restaurant.getName());
+    }
+    restaurants.put(restaurant.getName(), restaurant);
+  }
+
+  public void updateRestaurant(RestaurantModel restaurant) {
+    Objects.requireNonNull(restaurant, "Restaurant cannot be null.");
+    if (!restaurants.containsKey(restaurant.getName())) {
+      throw new IllegalArgumentException("Restaurant not found: " + restaurant.getName());
     }
     restaurants.put(restaurant.getName(), restaurant);
   }
@@ -52,6 +63,7 @@ public class DataRepository {
   }
 
   public void addDish(DishModel dish) {
+    Objects.requireNonNull(dish, "Dish cannot be null.");
     if (dishes.containsKey(dish.getName())) {
       throw new IllegalArgumentException("Dish already exists: " + dish.getName());
     }
@@ -73,9 +85,17 @@ public class DataRepository {
     dishes.remove(name);
   }
 
+  public void updateDish(DishModel dish) {
+    Objects.requireNonNull(dish, "Dish cannot be null.");
+    if (!dishes.containsKey(dish.getName())) {
+      throw new IllegalArgumentException("Dish not found: " + dish.getName());
+    }
+    dishes.put(dish.getName(), dish);
+  }
+
   public void addReview(Review review) {
+    Objects.requireNonNull(review, "Review cannot be null.");
     reviews.add(review);
-    notifyObservers("New review added: " + review.getComment());
   }
 
   public List<Review> getAllReviews() {
@@ -85,21 +105,6 @@ public class DataRepository {
   public void removeReview(Review review) {
     if (!reviews.remove(review)) {
       throw new IllegalArgumentException("Review not found.");
-    }
-    notifyObservers("Review removed: " + review.getComment());
-  }
-
-  public void addObserver(Observer observer) {
-    observers.add(observer);
-  }
-
-  public void removeObserver(Observer observer) {
-    observers.remove(observer);
-  }
-
-  public void notifyObservers(String mensaje) {
-    for (Observer observer : observers) {
-      observer.update(mensaje);
     }
   }
 }

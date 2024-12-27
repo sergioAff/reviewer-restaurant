@@ -2,61 +2,79 @@ package org.example.controllers;
 
 import org.example.models.RestaurantModel;
 import org.example.models.RestaurantReviewModel;
-import org.example.repositories.DataRepository;
-import org.example.utils.ReviewFactory;
+import org.example.observable.Observable;
+import org.example.observable.Observer;
+import org.example.services.RestaurantService;
+import org.example.services.ReviewService;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantController {
-  private DataRepository repository;
-  private ReviewFactory reviewFactory;
+public class RestaurantController implements Observable {
+  private final RestaurantService restaurantService;
+  private final ReviewService reviewService;
+  private final List<Observer> observers;
 
   public RestaurantController() {
-    this.repository = DataRepository.getInstance();
-    this.reviewFactory = new ReviewFactory();
+    this.restaurantService = new RestaurantService();
+    this.reviewService = new ReviewService();
+    this.observers = new ArrayList<>();
   }
 
   public void createRestaurant(String name, String address, boolean isAvailable) {
-    RestaurantModel restaurant = new RestaurantModel(name, address, isAvailable);
-    repository.addRestaurant(restaurant);
+    restaurantService.createRestaurant(name, address, isAvailable);
+    notifyObservers();
   }
 
   public List<RestaurantModel> getAllRestaurants() {
-    return repository.getAllRestaurants();
+    return restaurantService.getAllRestaurants();
   }
 
   public void updateRestaurant(String name, String newAddress, boolean newAvailability) {
-    RestaurantModel restaurant = repository.getRestaurant(name);
-    if (restaurant != null) {
-      restaurant.setAddress(newAddress);
-      restaurant.setAvailable(newAvailability);
-    }
+    restaurantService.updateRestaurant(name, newAddress, newAvailability);
+    notifyObservers();
   }
 
   public void deleteRestaurant(String name) {
-    repository.removeRestaurant(name);
+    restaurantService.deleteRestaurant(name);
+    notifyObservers();
   }
 
   public void addReviewToRestaurant(String restaurantName, String reviewerName, int rating, String comment) {
-    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null) {
-      reviewFactory.createReview("Restaurant", reviewerName, rating, comment, restaurant);
-    }
+    reviewService.addReviewToRestaurant(restaurantName, reviewerName, rating, comment);
+    notifyObservers();
   }
 
   public List<RestaurantReviewModel> getReviewsOfRestaurant(String restaurantName) {
-    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null) {
-      return restaurant.getReviews();
-    }
-    return null;
+    return reviewService.getReviewsForRestaurant(restaurantName);
   }
 
   public double getAverageRatingOfRestaurant(String restaurantName) {
-    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
+    RestaurantModel restaurant = restaurantService.getAllRestaurants().stream()
+      .filter(r -> r.getName().equals(restaurantName))
+      .findFirst()
+      .orElse(null);
+
     if (restaurant != null) {
       return restaurant.getAverageRating();
     }
     return 0.0;
+  }
+
+  @Override
+  public void addObserver(Observer observer) {
+    observers.add(observer);
+  }
+
+  @Override
+  public void removeObserver(Observer observer) {
+    observers.remove(observer);
+  }
+
+  @Override
+  public void notifyObservers() {
+    for (Observer observer : observers) {
+      observer.update("Restaurant updated");
+    }
   }
 }
