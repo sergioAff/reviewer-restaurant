@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MenuModel {
-  private LinkedList<DishModel> dishes;
+  private List<DishModel> dishes;
   private RestaurantModel restaurant;
 
   public MenuModel(RestaurantModel restaurant) {
@@ -16,7 +16,7 @@ public class MenuModel {
     return dishes;
   }
 
-  public void setDishes(LinkedList<DishModel> dishes) {
+  public void setDishes(List<DishModel> dishes) {
     this.dishes = dishes;
   }
 
@@ -34,5 +34,14 @@ public class MenuModel {
 
   public void removeDish(DishModel dish) {
     this.dishes.remove(dish);
+  }
+
+  public DishModel findDishByName(String name) {
+    for (DishModel dish : dishes) {
+      if (dish.getName().equalsIgnoreCase(name)) {
+        return dish;
+      }
+    }
+    return null;
   }
 }

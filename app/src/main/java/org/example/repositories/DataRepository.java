@@ -1,15 +1,11 @@
 package org.example.repositories;
 
 import org.example.models.DishModel;
-import org.example.models.MenuModel;
 import org.example.models.RestaurantModel;
 import org.example.models.Review;
 import org.example.observable.Observer;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataRepository {
   private static DataRepository instance;
@@ -34,6 +30,9 @@ public class DataRepository {
   }
 
   public void addRestaurant(RestaurantModel restaurant) {
+    if (restaurants.containsKey(restaurant.getName())) {
+      throw new IllegalArgumentException("Restaurant already exists: " + restaurant.getName());
+    }
     restaurants.put(restaurant.getName(), restaurant);
   }
 
@@ -42,14 +41,20 @@ public class DataRepository {
   }
 
   public List<RestaurantModel> getAllRestaurants() {
-    return new LinkedList<>(restaurants.values());
+    return new ArrayList<>(restaurants.values());
   }
 
   public void removeRestaurant(String name) {
+    if (!restaurants.containsKey(name)) {
+      throw new IllegalArgumentException("Restaurant not found: " + name);
+    }
     restaurants.remove(name);
   }
 
   public void addDish(DishModel dish) {
+    if (dishes.containsKey(dish.getName())) {
+      throw new IllegalArgumentException("Dish already exists: " + dish.getName());
+    }
     dishes.put(dish.getName(), dish);
   }
 
@@ -58,25 +63,30 @@ public class DataRepository {
   }
 
   public List<DishModel> getAllDishes() {
-    return new LinkedList<>(dishes.values());
+    return new ArrayList<>(dishes.values());
   }
 
   public void removeDish(String name) {
+    if (!dishes.containsKey(name)) {
+      throw new IllegalArgumentException("Dish not found: " + name);
+    }
     dishes.remove(name);
   }
 
   public void addReview(Review review) {
     reviews.add(review);
-    notifyObservers();
+    notifyObservers("New review added: " + review.getComment());
   }
 
   public List<Review> getAllReviews() {
-    return new LinkedList<>(reviews);
+    return new ArrayList<>(reviews);
   }
 
   public void removeReview(Review review) {
-    reviews.remove(review);
-    notifyObservers();
+    if (!reviews.remove(review)) {
+      throw new IllegalArgumentException("Review not found.");
+    }
+    notifyObservers("Review removed: " + review.getComment());
   }
 
   public void addObserver(Observer observer) {
@@ -87,9 +97,9 @@ public class DataRepository {
     observers.remove(observer);
   }
 
-  public void notifyObservers() {
+  public void notifyObservers(String mensaje) {
     for (Observer observer : observers) {
-      observer.update();
+      observer.update(mensaje);
     }
   }
 }

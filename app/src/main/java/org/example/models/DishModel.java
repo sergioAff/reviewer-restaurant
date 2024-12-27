@@ -6,21 +6,22 @@ import org.example.observable.Observer;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DishModel implements Observable {
+public class DishModel extends Observable {
   private String name;
   private String description;
   private double price;
   private LinkedList<DishReviewModel> reviews;
   private double averageRating;
-  private List<Observer> observers;
 
   public DishModel(String name, String description, double price) {
+    if (price < 0) {
+      throw new IllegalArgumentException("Price cannot be negative.");
+    }
     this.name = name;
     this.description = description;
     this.price = price;
     this.reviews = new LinkedList<>();
     this.averageRating = 0.0;
-    this.observers = new LinkedList<>();
   }
 
   private void calculateAverageRating() {
@@ -33,9 +34,20 @@ public class DishModel implements Observable {
       }
       this.averageRating = sum / reviews.size();
     }
-    notifyObservers();
+    notifyObservers("The average rating for " + name + " is now: " + averageRating);
   }
 
+  public void addReview(DishReviewModel review) {
+    this.reviews.add(review);
+    calculateAverageRating();
+  }
+
+  public void removeReview(DishReviewModel review) {
+    this.reviews.remove(review);
+    calculateAverageRating();
+  }
+
+  // Getters and Setters
   public String getName() {
     return name;
   }
@@ -57,6 +69,9 @@ public class DishModel implements Observable {
   }
 
   public void setPrice(double price) {
+    if (price < 0) {
+      throw new IllegalArgumentException("Price cannot be negative.");
+    }
     this.price = price;
   }
 
@@ -64,39 +79,7 @@ public class DishModel implements Observable {
     return reviews;
   }
 
-  public void setReviews(LinkedList<DishReviewModel> reviews) {
-    this.reviews = reviews;
-    calculateAverageRating();
-  }
-
   public double getAverageRating() {
     return averageRating;
-  }
-
-  public void addReview(DishReviewModel review) {
-    this.reviews.add(review);
-    calculateAverageRating();
-  }
-
-  public void removeReview(DishReviewModel review) {
-    this.reviews.remove(review);
-    calculateAverageRating();
-  }
-
-  @Override
-  public void addObserver(Observer observer) {
-    observers.add(observer);
-  }
-
-  @Override
-  public void removeObserver(Observer observer) {
-    observers.remove(observer);
-  }
-
-  @Override
-  public void notifyObservers() {
-    for (Observer observer : observers) {
-      observer.update();
-    }
   }
 }

@@ -6,14 +6,13 @@ import org.example.observable.Observer;
 import java.util.LinkedList;
 import java.util.List;
 
-public class RestaurantModel implements Observable {
+public class RestaurantModel extends Observable {
   private String name;
   private String address;
   private MenuModel menu;
   private LinkedList<RestaurantReviewModel> reviews;
   private double averageRating;
   private boolean isAvailable;
-  private List<Observer> observers;
 
   public RestaurantModel(String name, String address, boolean isAvailable) {
     this.name = name;
@@ -21,7 +20,6 @@ public class RestaurantModel implements Observable {
     this.reviews = new LinkedList<>();
     this.averageRating = 0.0;
     this.isAvailable = isAvailable;
-    this.observers = new LinkedList<>();
   }
 
   private void calculateAverageRating() {
@@ -34,9 +32,23 @@ public class RestaurantModel implements Observable {
       }
       this.averageRating = sum / reviews.size();
     }
-    notifyObservers();
+    notifyObservers("The average rating for " + name + " is now: " + averageRating);
   }
 
+  public void addReview(RestaurantReviewModel review) {
+    this.reviews.add(review);
+    calculateAverageRating();
+  }
+
+  public boolean isAvailable() {
+    return isAvailable;
+  }
+
+  public void setAvailable(boolean isAvailable) {
+    this.isAvailable = isAvailable;
+  }
+
+  // Getters and Setters
   public String getName() {
     return name;
   }
@@ -65,42 +77,7 @@ public class RestaurantModel implements Observable {
     return reviews;
   }
 
-  public void setReviews(LinkedList<RestaurantReviewModel> reviews) {
-    this.reviews = reviews;
-    calculateAverageRating();
-  }
-
   public double getAverageRating() {
     return averageRating;
-  }
-
-  public void addReview(RestaurantReviewModel review) {
-    this.reviews.add(review);
-    calculateAverageRating();
-  }
-
-  public boolean isAvailable() {
-    return isAvailable;
-  }
-
-  public void setAvailable(boolean isAvailable) {
-    this.isAvailable = isAvailable;
-  }
-
-  @Override
-  public void addObserver(Observer observer) {
-    observers.add(observer);
-  }
-
-  @Override
-  public void removeObserver(Observer observer) {
-    observers.remove(observer);
-  }
-
-  @Override
-  public void notifyObservers() {
-    for (Observer observer : observers) {
-      observer.update();
-    }
   }
 }

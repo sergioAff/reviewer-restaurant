@@ -14,36 +14,42 @@ public class MenuService {
 
   public void createMenuForRestaurant(String restaurantName) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null) {
-      MenuModel menu = new MenuModel(restaurant);
-      restaurant.setMenu(menu);
+    if (restaurant == null) {
+      throw new IllegalArgumentException("Restaurant not found.");
     }
+    if (restaurant.getMenu() != null) {
+      throw new IllegalArgumentException("Restaurant already has a menu.");
+    }
+    MenuModel menu = new MenuModel(restaurant);
+    restaurant.setMenu(menu);
   }
 
   public void addDishToMenu(String restaurantName, DishModel dish) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null && restaurant.getMenu() != null) {
-      restaurant.getMenu().addDish(dish);
-      repository.addDish(dish); // Add the dish to the repository
+    if (restaurant == null || restaurant.getMenu() == null) {
+      throw new IllegalArgumentException("Restaurant or menu not found.");
+    }
+    restaurant.getMenu().addDish(dish);
+    if (repository.getDish(dish.getName()) == null) {
+      repository.addDish(dish);
     }
   }
 
   public void removeDishFromMenu(String restaurantName, String dishName) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null && restaurant.getMenu() != null) {
-      DishModel dish = repository.getDish(dishName);
-      if (dish != null) {
-        restaurant.getMenu().removeDish(dish);
-        repository.removeDish(dishName); // Remove the dish from the repository
-      }
+    if (restaurant == null || restaurant.getMenu() == null) {
+      throw new IllegalArgumentException("Restaurant or menu not found.");
     }
+    DishModel dish = repository.getDish(dishName);
+    if (dish == null) {
+      throw new IllegalArgumentException("Dish not found.");
+    }
+    restaurant.getMenu().removeDish(dish);
+    repository.removeDish(dishName);
   }
 
   public MenuModel getMenuOfRestaurant(String restaurantName) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant != null) {
-      return restaurant.getMenu();
-    }
-    return null;
+    return restaurant != null ? restaurant.getMenu() : null;
   }
 }

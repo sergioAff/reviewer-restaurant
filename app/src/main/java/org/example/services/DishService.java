@@ -13,6 +13,9 @@ public class DishService {
   }
 
   public void createDish(String name, String description, double price) {
+    if (repository.getDish(name) != null) {
+      throw new IllegalArgumentException("Dish with this name already exists.");
+    }
     DishModel dish = new DishModel(name, description, price);
     repository.addDish(dish);
   }
@@ -23,13 +26,17 @@ public class DishService {
 
   public void updateDish(String name, String newDescription, double newPrice) {
     DishModel dish = repository.getDish(name);
-    if (dish != null) {
-      dish.setDescription(newDescription);
-      dish.setPrice(newPrice);
+    if (dish == null) {
+      throw new IllegalArgumentException("Dish not found.");
     }
+    dish.setDescription(newDescription);
+    dish.setPrice(newPrice);
   }
 
   public void deleteDish(String name) {
+    if (repository.getDish(name) == null) {
+      throw new IllegalArgumentException("Dish not found.");
+    }
     repository.removeDish(name);
   }
 }
