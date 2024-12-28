@@ -1,15 +1,17 @@
 package org.example.services;
 
 import org.example.models.RestaurantModel;
+import org.example.observable.Observer;
 import org.example.repositories.DataRepository;
 
 import java.util.List;
 
-public class RestaurantService {
+public class RestaurantService implements Observer {
   private final DataRepository repository;
 
   public RestaurantService() {
     this.repository = DataRepository.getInstance();
+    repository.addObserver(this);
   }
 
   public void createRestaurant(String name, String address, boolean isAvailable) {
@@ -39,5 +41,10 @@ public class RestaurantService {
       throw new IllegalArgumentException("Restaurant not found.");
     }
     repository.removeRestaurant(name);
+  }
+
+  @Override
+  public void update(String message) {
+    System.out.println("RestaurantService received notification: " + message);
   }
 }

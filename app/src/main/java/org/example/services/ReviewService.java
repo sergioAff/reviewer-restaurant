@@ -4,18 +4,20 @@ import org.example.models.DishModel;
 import org.example.models.DishReviewModel;
 import org.example.models.RestaurantModel;
 import org.example.models.RestaurantReviewModel;
+import org.example.observable.Observer;
 import org.example.repositories.DataRepository;
 import org.example.utils.ReviewFactory;
 
 import java.util.List;
 
-public class ReviewService {
+public class ReviewService implements Observer {
   private final DataRepository repository;
   private final ReviewFactory reviewFactory;
 
   public ReviewService() {
     this.repository = DataRepository.getInstance();
     this.reviewFactory = new ReviewFactory();
+    repository.addObserver(this);
   }
 
   public void addReviewToRestaurant(String restaurantName, String reviewerName, int rating, String comment) {
@@ -48,5 +50,19 @@ public class ReviewService {
       throw new IllegalArgumentException("Dish not found: " + dishName);
     }
     return dish.getReviews();
+  }
+
+  @Override
+  public void update(String message) {
+    System.out.println("ReviewService received notification: " + message);
+    if (message.contains("Restaurant added")) {
+      System.out.println("New restaurant added. Ready to manage reviews for it.");
+    } else if (message.contains("Restaurant removed")) {
+      System.out.println("A restaurant was removed. Validating reviews cleanup.");
+    } else if (message.contains("Dish added")) {
+      System.out.println("New dish added. Ready to manage reviews for it.");
+    } else if (message.contains("Dish removed")) {
+      System.out.println("A dish was removed. Validating reviews cleanup.");
+    }
   }
 }

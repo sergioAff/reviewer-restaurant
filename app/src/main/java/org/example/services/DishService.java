@@ -2,18 +2,20 @@ package org.example.services;
 
 import org.example.models.DishModel;
 import org.example.models.DishReviewModel;
+import org.example.observable.Observer;
 import org.example.repositories.DataRepository;
 import org.example.utils.ReviewFactory;
 
 import java.util.List;
 
-public class DishService {
+public class DishService implements Observer {
   private final DataRepository repository;
   private final ReviewFactory reviewFactory;
 
   public DishService() {
     this.repository = DataRepository.getInstance();
     this.reviewFactory = new ReviewFactory();
+    repository.addObserver(this);
   }
 
   public void createDish(String name, String description, double price) {
@@ -52,5 +54,10 @@ public class DishService {
   public double getAverageRatingOfDish(String dishName) {
     DishModel dish = repository.getDish(dishName);
     return dish != null ? dish.getAverageRating() : 0.0;
+  }
+
+  @Override
+  public void update(String mensaje) {
+    System.out.println("DishService received notification: " + mensaje);
   }
 }

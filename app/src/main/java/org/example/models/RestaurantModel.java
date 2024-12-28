@@ -8,10 +8,10 @@ public class RestaurantModel {
   private String address;
   private MenuModel menu;
   private LinkedList<RestaurantReviewModel> reviews;
-  private double averageRating;
-  private boolean isAvailable;
+  private Double averageRating;
+  private Boolean isAvailable;
 
-  public RestaurantModel(String name, String address, boolean isAvailable) {
+  public RestaurantModel(String name, String address, Boolean isAvailable) {
     this.name = name;
     this.address = address;
     this.reviews = new LinkedList<>();
@@ -36,11 +36,11 @@ public class RestaurantModel {
     calculateAverageRating();
   }
 
-  public boolean isAvailable() {
+  public Boolean isAvailable() {
     return isAvailable;
   }
 
-  public void setAvailable(boolean isAvailable) {
+  public void setAvailable(Boolean isAvailable) {
     this.isAvailable = isAvailable;
   }
 

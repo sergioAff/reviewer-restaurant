@@ -12,7 +12,7 @@ public class RestaurantReviewController {
     this.reviewService = new ReviewService();
   }
 
-  public void addReviewToRestaurant(String restaurantName, String reviewerName, int rating, String comment) {
+  public void addReviewToRestaurant(String restaurantName, String reviewerName, Integer rating, String comment) {
     reviewService.addReviewToRestaurant(restaurantName, reviewerName, rating, comment);
   }
 

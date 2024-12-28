@@ -6,11 +6,11 @@ import java.util.List;
 public class DishModel {
   private String name;
   private String description;
-  private double price;
+  private Double price;
   private LinkedList<DishReviewModel> reviews;
-  private double averageRating;
+  private Double averageRating;
 
-  public DishModel(String name, String description, double price) {
+  public DishModel(String name, String description, Double price) {
     if (price < 0) {
       throw new IllegalArgumentException("Price cannot be negative.");
     }
@@ -25,7 +25,7 @@ public class DishModel {
     if (reviews.isEmpty()) {
       this.averageRating = 0.0;
     } else {
-      double sum = 0.0;
+      Double sum = 0.0;
       for (DishReviewModel review : reviews) {
         sum += review.getRating();
       }

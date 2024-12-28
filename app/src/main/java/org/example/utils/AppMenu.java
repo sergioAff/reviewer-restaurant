@@ -36,9 +36,6 @@ public class AppMenu {
     commandMap.put(MenuOption.CREATE_DISH, new CreateDishCommand(dishController, consoleHandler));
     commandMap.put(MenuOption.CREATE_RESTAURANT, new CreateRestaurantCommand(restaurantController, consoleHandler));
     commandMap.put(MenuOption.ADD_DISH_TO_MENU, new AddDishToMenuCommand(menuController, dishController, consoleHandler));
-//    commandMap.put(MenuOption.ADD_REVIEW_TO_DISH, new AddReviewToDishCommand(dishReviewController, consoleHandler));
-//    commandMap.put(MenuOption.ADD_REVIEW_TO_RESTAURANT, new AddReviewToRestaurantCommand(restaurantReviewController, consoleHandler));
-//    commandMap.put(MenuOption.VIEW_ALL_DISHES, new ViewAllDishesCommand(dishController, consoleHandler));
     commandMap.put(MenuOption.VIEW_ALL_RESTAURANTS, new ViewAllRestaurantsCommand(restaurantController, consoleHandler));
     commandMap.put(MenuOption.VIEW_DISH_REVIEWS, new ViewDishReviewsCommand(dishReviewController, consoleHandler));
     commandMap.put(MenuOption.VIEW_RESTAURANT_REVIEWS, new ViewRestaurantReviewsCommand(restaurantReviewController, consoleHandler));
