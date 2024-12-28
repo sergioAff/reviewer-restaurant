@@ -11,7 +11,7 @@ public class Main {
 
     while (true) {
       appMenu.displayMenu();
-      int option = Integer.parseInt(consoleHandler.readLine());
+      Integer option = Integer.parseInt(consoleHandler.readLine());
       appMenu.handleOption(option);
     }
   }

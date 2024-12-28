@@ -13,7 +13,7 @@ public class ReviewFactory {
     this.invoker = new ReviewInvoker();
   }
 
-  public void createReview(String reviewType, String reviewerName, int rating, String comment, Object target) {
+  public void createReview(String reviewType, String reviewerName, Double rating, String comment, Object target) {
     ICommand command;
     if ("Restaurant".equals(reviewType) && target instanceof RestaurantModel) {
       command = new CreateRestaurantReviewCommand((RestaurantModel) target, reviewerName, rating, comment);

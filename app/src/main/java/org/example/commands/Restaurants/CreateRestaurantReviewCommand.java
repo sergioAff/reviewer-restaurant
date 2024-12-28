@@ -6,13 +6,13 @@ import org.example.models.RestaurantReviewModel;
 import org.example.controllers.RestaurantReviewController;
 
 public class CreateRestaurantReviewCommand implements ICommand {
-  private RestaurantModel restaurant;
-  private String reviewerName;
-  private Integer rating;
-  private String comment;
-  private final RestaurantReviewController RestaurantReviewController = new RestaurantReviewController();
+  private final RestaurantModel restaurant;
+  private final String reviewerName;
+  private final Double rating;
+  private final String comment;
+  private final RestaurantReviewController restaurantReviewController = new RestaurantReviewController();
 
-  public CreateRestaurantReviewCommand(RestaurantModel restaurant, String reviewerName, Integer rating, String comment) {
+  public CreateRestaurantReviewCommand(RestaurantModel restaurant, String reviewerName, Double rating, String comment) {
     this.restaurant = restaurant;
     this.reviewerName = reviewerName;
     this.rating = rating;
@@ -21,8 +21,9 @@ public class CreateRestaurantReviewCommand implements ICommand {
 
   @Override
   public void execute() {
+
     RestaurantReviewModel review = new RestaurantReviewModel(reviewerName, rating, comment, restaurant);
     restaurant.addReview(review);
-    RestaurantReviewController.addReviewToRestaurant(restaurant.getName(), review.getReviewerName(), review.getRating(), review.getComment());
+    restaurantReviewController.addReviewToRestaurant(restaurant.getName(), review.getReviewerName(), review.getRating(), review.getComment());
   }
 }

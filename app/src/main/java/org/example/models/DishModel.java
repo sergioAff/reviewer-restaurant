@@ -21,6 +21,14 @@ public class DishModel {
     this.averageRating = 0.0;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+  public Double getPrice() {
+    return price;
+  }
+
   private void calculateAverageRating() {
     if (reviews.isEmpty()) {
       this.averageRating = 0.0;
@@ -38,11 +46,6 @@ public class DishModel {
     calculateAverageRating();
   }
 
-  public void removeReview(DishReviewModel review) {
-    this.reviews.remove(review);
-    calculateAverageRating();
-  }
-
   public String getName() {
     return name;
   }
@@ -51,16 +54,8 @@ public class DishModel {
     this.name = name;
   }
 
-  public String getDescription() {
-    return description;
-  }
-
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public double getPrice() {
-    return price;
   }
 
   public void setPrice(double price) {

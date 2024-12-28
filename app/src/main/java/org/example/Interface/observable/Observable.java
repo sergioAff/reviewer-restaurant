@@ -1,4 +1,4 @@
-package org.example.observable;
+package org.example.Interface.observable;
 
 public interface Observable {
   void addObserver(Observer observer);

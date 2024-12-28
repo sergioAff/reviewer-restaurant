@@ -2,10 +2,10 @@ package org.example.models;
 
 public abstract class Review {
   private String reviewerName;
-  private Integer rating;
+  private Double rating;
   private String comment;
 
-  public Review(String reviewerName, Integer rating, String comment) {
+  public Review(String reviewerName, Double rating, String comment) {
     this.reviewerName = reviewerName;
     this.rating = rating;
     this.comment = comment;
@@ -19,11 +19,11 @@ public abstract class Review {
     this.reviewerName = reviewerName;
   }
 
-  public Integer getRating() {
+  public Double getRating() {
     return rating;
   }
 
-  public void setRating(Integer rating) {
+  public void setRating(Double rating) {
     this.rating = rating;
   }
 

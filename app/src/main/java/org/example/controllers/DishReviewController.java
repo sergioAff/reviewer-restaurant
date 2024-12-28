@@ -12,7 +12,7 @@ public class DishReviewController {
     this.reviewService = new ReviewService();
   }
 
-  public void addReviewToDish(String dishName, String reviewerName, int rating, String comment) {
+  public void addReviewToDish(String dishName, String reviewerName, Double rating, String comment) {
     reviewService.addReviewToDish(dishName, reviewerName, rating, comment);
   }
 
@@ -20,13 +20,13 @@ public class DishReviewController {
     return reviewService.getReviewsForDish(dishName);
   }
 
-  public double getAverageRatingOfDish(String dishName) {
+  public Double getAverageRatingOfDish(String dishName) {
     List<DishReviewModel> reviews = getReviewsOfDish(dishName);
     if (reviews == null || reviews.isEmpty()) {
       return 0.0;
     }
     return reviews.stream()
-      .mapToInt(DishReviewModel::getRating)
+      .mapToDouble(DishReviewModel::getRating)
       .average()
       .orElse(0.0);
   }

@@ -3,7 +3,7 @@ package org.example.models;
 public class DishReviewModel extends Review {
   private DishModel dish;
 
-  public DishReviewModel(String reviewerName, Integer rating, String comment, DishModel dish) {
+  public DishReviewModel(String reviewerName, Double rating, String comment, DishModel dish) {
     super(reviewerName, rating, comment);
     this.dish = dish;
   }

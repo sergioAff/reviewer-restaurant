@@ -6,13 +6,13 @@ import org.example.models.DishModel;
 import org.example.models.DishReviewModel;
 
 public class CreateDishReviewCommand implements ICommand {
-  private DishModel dish;
-  private String reviewerName;
-  private Integer rating;
-  private String comment;
+  private final DishModel dish;
+  private final String reviewerName;
+  private final Double rating;
+  private final String comment;
   private final DishReviewController dishReviewController = new DishReviewController();
 
-  public CreateDishReviewCommand(DishModel dish, String reviewerName, int rating, String comment) {
+  public CreateDishReviewCommand(DishModel dish, String reviewerName, Double rating, String comment) {
     this.dish = dish;
     this.reviewerName = reviewerName;
     this.rating = rating;

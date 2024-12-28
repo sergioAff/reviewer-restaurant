@@ -2,7 +2,7 @@ package org.example.services;
 
 import org.example.models.DishModel;
 import org.example.models.DishReviewModel;
-import org.example.observable.Observer;
+import org.example.Interface.observable.Observer;
 import org.example.repositories.DataRepository;
 import org.example.utils.ReviewFactory;
 
@@ -23,41 +23,51 @@ public class DishService implements Observer {
     repository.addDish(dish);
   }
 
-  public List<DishModel> getAllDishes() {
-    return repository.getAllDishes();
+  public List<DishModel> getAllDishes(String name) {
+    return repository.getAllDishes(name);
   }
 
-  public void updateDish(String name, String newDescription, double newPrice) {
+  public void updateDish(String name, String newDescription, Double newPrice) {
     DishModel dish = repository.getDish(name);
     if (dish != null) {
       dish.setDescription(newDescription);
       dish.setPrice(newPrice);
+    } else {
+      throw new IllegalArgumentException("Dish not found: " + name);
     }
   }
 
-  public void deleteDish(String name) {
-    repository.removeDish(name);
-  }
-
-  public void addReviewToDish(String dishName, String reviewerName, int rating, String comment) {
+  public void addReviewToDish(String dishName, String reviewerName, Double rating, String comment) {
     DishModel dish = repository.getDish(dishName);
     if (dish != null) {
       reviewFactory.createReview("Dish", reviewerName, rating, comment, dish);
+    } else {
+      throw new IllegalArgumentException("Dish not found: " + dishName);
     }
   }
 
   public List<DishReviewModel> getReviewsOfDish(String dishName) {
     DishModel dish = repository.getDish(dishName);
-    return dish != null ? dish.getReviews() : null;
+    if (dish != null) {
+      return dish.getReviews();
+    } else {
+      throw new IllegalArgumentException("Dish not found: " + dishName);
+    }
   }
 
   public double getAverageRatingOfDish(String dishName) {
     DishModel dish = repository.getDish(dishName);
-    return dish != null ? dish.getAverageRating() : 0.0;
+    if (dish != null) {
+      return dish.getAverageRating();
+    } else {
+      throw new IllegalArgumentException("Dish not found: " + dishName);
+    }
   }
 
   @Override
-  public void update(String mensaje) {
-    System.out.println("DishService received notification: " + mensaje);
+  public void update(String message) {
+    if (message.toLowerCase().contains("dish")) {
+      System.out.println("DishService received notification: " + message);
+    }
   }
 }

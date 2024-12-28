@@ -1,7 +1,7 @@
 package org.example.services;
 
 import org.example.models.RestaurantModel;
-import org.example.observable.Observer;
+import org.example.Interface.observable.Observer;
 import org.example.repositories.DataRepository;
 
 import java.util.List;
@@ -41,10 +41,21 @@ public class RestaurantService implements Observer {
       throw new IllegalArgumentException("Restaurant not found.");
     }
     repository.removeRestaurant(name);
+    repository.removeObserver(this);
   }
+
+  public Double getAverageRatingOfRestaurant(String name) {
+    if (repository.getRestaurant(name) == null) {
+      throw new IllegalArgumentException("Restaurant not found.");
+    }
+    return repository.calculateAverageRatingRestaurant(name);
+  }
+
 
   @Override
   public void update(String message) {
-    System.out.println("RestaurantService received notification: " + message);
+    if (message.contains("Restaurant")||message.contains("restaurant")) {
+      System.out.println("RestaurantService received notification: " + message);
+    }
   }
 }

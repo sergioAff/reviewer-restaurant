@@ -1,20 +1,24 @@
 package org.example.services;
 
+import org.example.Interface.IConsoleHandler;
 import org.example.models.DishModel;
 import org.example.models.MenuModel;
 import org.example.models.RestaurantModel;
 import org.example.repositories.DataRepository;
+import org.example.utils.ConsoleHandler;
 
 import java.util.List;
 
 public class MenuService {
   private final DataRepository repository;
+  private final IConsoleHandler consoleHandler;
 
   public MenuService() {
     this.repository = DataRepository.getInstance();
+    this.consoleHandler = new ConsoleHandler();
   }
 
-  public void createMenuForRestaurant(String restaurantName) {
+  public void createMenuForRestaurant(String restaurantName, String menuName) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
     if (restaurant == null) {
       throw new IllegalArgumentException("Restaurant not found: " + restaurantName);
@@ -22,19 +26,37 @@ public class MenuService {
     if (restaurant.getMenu() != null) {
       throw new IllegalArgumentException("Restaurant already has a menu.");
     }
-    MenuModel menu = new MenuModel(restaurant);
+    MenuModel menu = new MenuModel(restaurant, menuName);
     restaurant.setMenu(menu);
+    repository.associateMenuToRestaurant(restaurantName, menu);
   }
 
-  public void addDishToMenu(String restaurantName, DishModel dish) {
+  public void addDishToMenu(String restaurantName, DishModel dishName) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    if (restaurant == null || restaurant.getMenu() == null) {
-      throw new IllegalArgumentException("Restaurant or menu not found.");
+    DishModel dish = repository.getDish(dishName.getName());
+    if (restaurant == null || restaurant.getMenu() == null || dish == null) {
+      throw new IllegalArgumentException("Restaurant, menu or dish not found.");
     }
     restaurant.getMenu().addDish(dish);
 
     if (repository.getDish(dish.getName()) == null) {
-      repository.addDish(dish); // Agregar el plato al repositorio si aún no existe.
+      repository.addDishToMenu(restaurantName,dish);
+    }
+  }
+
+  public void editDishInMenu(String restaurantName, String dishName, DishModel updatedDish) {
+    RestaurantModel restaurant = repository.getRestaurant(restaurantName);
+    if (restaurant == null || restaurant.getMenu() == null) {
+      throw new IllegalArgumentException("Restaurant or menu not found.");
+    }
+    MenuModel menu = restaurant.getMenu();
+    List<DishModel> dishes = menu.getDishes();
+    for (int i = 0; i < dishes.size(); i++) {
+      if (dishes.get(i).getName().equalsIgnoreCase(dishName)) {
+        dishes.set(i, updatedDish);
+        repository.editDishInMenu(restaurantName,dishName,updatedDish);
+        return;
+      }
     }
   }
 
@@ -47,8 +69,9 @@ public class MenuService {
     if (dish == null) {
       throw new IllegalArgumentException("Dish not found: " + dishName);
     }
+
     restaurant.getMenu().removeDish(dish);
-    repository.removeDish(dishName); // Eliminar el plato del repositorio.
+    repository.removeDishFromMenu(restaurantName,dishName);
   }
 
   public MenuModel getMenuOfRestaurant(String restaurantName) {
@@ -56,11 +79,16 @@ public class MenuService {
     return restaurant != null ? restaurant.getMenu() : null;
   }
 
-  public List<DishModel> getDishesInMenu(String restaurantName) {
+  public void getDishesInMenu(String restaurantName) {
     MenuModel menu = getMenuOfRestaurant(restaurantName);
     if (menu == null) {
       throw new IllegalArgumentException("Menu not found for restaurant: " + restaurantName);
     }
-    return menu.getDishes();
+
+    List<DishModel> dishes = menu.getDishes();
+    for (DishModel dish : dishes) {
+      consoleHandler.writeLine("Plato: " + dish.getName() + ", Descripción: " + dish.getDescription() + ", Precio: " + dish.getPrice());
+    }
   }
+
 }
