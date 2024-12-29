@@ -7,8 +7,10 @@ import org.example.controllers.RestaurantReviewController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CreateRestaurantReviewCommandTest {
 
@@ -19,6 +21,16 @@ class CreateRestaurantReviewCommandTest {
   void setup() {
     mockRestaurant = mock(RestaurantModel.class);
     mockReviewController = mock(RestaurantReviewController.class);
+    when(mockRestaurant.getName()).thenReturn("Restaurante 1");
+    doNothing().when(mockReviewController).addReviewToRestaurant(anyString(), anyString(), anyDouble(), anyString());
+    // Ensure the restaurant exists in the mock controller
+    doAnswer(invocation -> {
+      String restaurantName = invocation.getArgument(0);
+      if (!"Restaurante 1".equals(restaurantName)) {
+        throw new IllegalArgumentException("Restaurante no encontrado: " + restaurantName);
+      }
+      return null;
+    }).when(mockReviewController).addReviewToRestaurant(anyString(), anyString(), anyDouble(), anyString());
   }
 
   @Test
@@ -30,16 +42,31 @@ class CreateRestaurantReviewCommandTest {
 
     CreateRestaurantReviewCommand command = new CreateRestaurantReviewCommand(mockRestaurant, reviewerName, rating, comment);
 
+    // Inject the mock controller into the command using reflection
+    try {
+      java.lang.reflect.Field field = CreateRestaurantReviewCommand.class.getDeclaredField("restaurantReviewController");
+      field.setAccessible(true);
+      field.set(command, mockReviewController);
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+
     command.execute();
 
-    RestaurantReviewModel expectedReview = new RestaurantReviewModel(reviewerName, rating, comment, mockRestaurant);
+    ArgumentCaptor<RestaurantReviewModel> reviewCaptor = ArgumentCaptor.forClass(RestaurantReviewModel.class);
+    verify(mockRestaurant).addReview(reviewCaptor.capture());
+    RestaurantReviewModel capturedReview = reviewCaptor.getValue();
 
-    verify(mockRestaurant).addReview(expectedReview);
+    assertEquals(reviewerName, capturedReview.getReviewerName());
+    assertEquals(rating, capturedReview.getRating());
+    assertEquals(comment, capturedReview.getComment());
+    assertEquals(mockRestaurant, capturedReview.getRestaurant());
+
     verify(mockReviewController).addReviewToRestaurant(
       mockRestaurant.getName(),
-      expectedReview.getReviewerName(),
-      expectedReview.getRating(),
-      expectedReview.getComment()
+      capturedReview.getReviewerName(),
+      capturedReview.getRating(),
+      capturedReview.getComment()
     );
   }
 }
