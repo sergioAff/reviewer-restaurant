@@ -15,11 +15,11 @@ public class DeleteDishFromMenuCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name:");
+    consoleHandler.writeLine("Ingresa el nombre del restaurante:");
     String restaurantName = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter dish name:");
+    consoleHandler.writeLine("Ingresa el nombre del plato:");
     String dishName = consoleHandler.readLine();
     menuController.removeDishFromMenu(restaurantName, dishName);
-    consoleHandler.writeLine("Dish deleted from menu successfully.");
+    consoleHandler.writeLine("Plato eliminado con éxito del menú.");
   }
 }

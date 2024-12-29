@@ -15,9 +15,9 @@ public class GetAverageRatingOfRestaurantCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name:");
+    consoleHandler.writeLine("Ingrese el nombre del restaurante:");
     String name = consoleHandler.readLine();
     double averageRating = restaurantController.getAverageRatingOfRestaurant(name);
-    consoleHandler.writeLine("Average rating of " + name + ": " + averageRating);
+    consoleHandler.writeLine("Valoración promedio del restaurante " + name + ": " + averageRating);
 }
 }

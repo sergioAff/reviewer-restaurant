@@ -19,15 +19,4 @@ public class RestaurantReviewController {
   public List<RestaurantReviewModel> getReviewsOfRestaurant(String restaurantName) {
     return reviewService.getReviewsForRestaurant(restaurantName);
   }
-
-  public Double getAverageRatingOfRestaurant(String restaurantName) {
-    List<RestaurantReviewModel> reviews = getReviewsOfRestaurant(restaurantName);
-    if (reviews == null || reviews.isEmpty()) {
-      return 0.0;
-    }
-    return reviews.stream()
-      .mapToDouble(RestaurantReviewModel::getRating)
-      .average()
-      .orElse(0.0);
-  }
 }

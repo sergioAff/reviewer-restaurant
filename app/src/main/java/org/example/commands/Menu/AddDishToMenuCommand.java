@@ -17,13 +17,13 @@ public class AddDishToMenuCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name:");
+    consoleHandler.writeLine("Ingresa el nombre del restaurante:");
     String restaurantName = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter dish name:");
+    consoleHandler.writeLine("Ingresa el nombre del plato:");
     String dishName = consoleHandler.readLine();
 
     DishModel dish = new DishModel(dishName, "", 0.0);
     menuController.addDishToMenu(restaurantName, dish);
-    consoleHandler.writeLine("Dish added to menu successfully.");
+    consoleHandler.writeLine("Plato agregado con éxito al menú.");
   }
 }

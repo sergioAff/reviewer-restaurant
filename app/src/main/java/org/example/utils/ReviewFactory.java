@@ -20,7 +20,7 @@ public class ReviewFactory {
     } else if ("Dish".equals(reviewType) && target instanceof DishModel) {
       command = new CreateDishReviewCommand((DishModel) target, reviewerName, rating, comment);
     } else {
-      throw new IllegalArgumentException("Invalid review type or target");
+      throw new IllegalArgumentException("Error en la creación de la review");
     }
     invoker.setCommand(command);
     invoker.executeCommand();

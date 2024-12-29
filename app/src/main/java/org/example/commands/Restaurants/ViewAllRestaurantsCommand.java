@@ -20,10 +20,10 @@ public class ViewAllRestaurantsCommand implements ICommand {
   public void execute() {
     List<RestaurantModel> restaurants = restaurantController.getAllRestaurants();
     if (restaurants.isEmpty()) {
-      consoleHandler.writeLine("No restaurants found.");
+      consoleHandler.writeLine("No se encontraron restaurantes.");
     } else {
       for (RestaurantModel restaurant : restaurants) {
-        consoleHandler.writeLine("Name: " + restaurant.getName() + ", Address: " + restaurant.getAddress() + ", Available: " + restaurant.isAvailable());
+        consoleHandler.writeLine("Nombre: " + restaurant.getName() + ", Dirección: " + restaurant.getAddress() + ", Disponibilidad: " + restaurant.isAvailable() + ", Rating: " + restaurant.getAverageRating());
       }
     }
   }

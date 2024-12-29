@@ -15,7 +15,7 @@ public class ViewDishByRestaurantCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name:");
+    consoleHandler.writeLine("Ingresa el nombre del restaurante:");
     String restaurantName = consoleHandler.readLine();
     menuController.getDishesInMenu(restaurantName);
   }

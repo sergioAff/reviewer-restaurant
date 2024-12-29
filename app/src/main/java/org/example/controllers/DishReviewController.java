@@ -19,15 +19,4 @@ public class DishReviewController {
   public List<DishReviewModel> getReviewsOfDish(String dishName) {
     return reviewService.getReviewsForDish(dishName);
   }
-
-  public Double getAverageRatingOfDish(String dishName) {
-    List<DishReviewModel> reviews = getReviewsOfDish(dishName);
-    if (reviews == null || reviews.isEmpty()) {
-      return 0.0;
-    }
-    return reviews.stream()
-      .mapToDouble(DishReviewModel::getRating)
-      .average()
-      .orElse(0.0);
-  }
 }

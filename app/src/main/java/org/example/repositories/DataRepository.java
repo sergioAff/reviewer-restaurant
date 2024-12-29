@@ -37,10 +37,6 @@ public class DataRepository implements Observable {
     return restaurants.get(restaurant).getAverageRating();
   }
 
-  public Double calculateAverageRatingDish(String dish) {
-    return dishes.get(dish).getAverageRating();
-  }
-
   @Override
   public void addObserver(Observer observer) {
     observers.add(observer);
@@ -59,21 +55,21 @@ public class DataRepository implements Observable {
   }
 
   public void addRestaurant(RestaurantModel restaurant) {
-    Objects.requireNonNull(restaurant, "Restaurant cannot be null.");
+    Objects.requireNonNull(restaurant, "El restaurante no puede ser nulo.");
     if (restaurants.containsKey(restaurant.getName())) {
-      throw new IllegalArgumentException("Restaurant already exists: " + restaurant.getName());
+      throw new IllegalArgumentException("El restaurante ya existe: " + restaurant.getName());
     }
     restaurants.put(restaurant.getName(), restaurant);
-    notifyObservers("New restaurant added: " + restaurant.getName());
+    notifyObservers("Nuevo restaurante agregado: " + restaurant.getName());
   }
 
   public void updateRestaurant(RestaurantModel restaurant) {
-    Objects.requireNonNull(restaurant, "Restaurant cannot be null.");
+    Objects.requireNonNull(restaurant, "El restaurante no puede ser nulo.");
     if (!restaurants.containsKey(restaurant.getName())) {
-      throw new IllegalArgumentException("Restaurant not found: " + restaurant.getName());
+      throw new IllegalArgumentException("Restaurante no encontrado: " + restaurant.getName());
     }
     restaurants.put(restaurant.getName(), restaurant);
-    notifyObservers("Restaurant updated: " + restaurant.getName());
+    notifyObservers("Restaurante actualizado: " + restaurant.getName());
   }
 
   public RestaurantModel getRestaurant(String name) {
@@ -86,105 +82,99 @@ public class DataRepository implements Observable {
 
   public void removeRestaurant(String name) {
     if (!restaurants.containsKey(name)) {
-      throw new IllegalArgumentException("Restaurant not found: " + name);
+      throw new IllegalArgumentException("Restaurante no encontrado: " + name);
     }
     restaurants.remove(name);
-    notifyObservers("Restaurant removed: " + name);
+    notifyObservers("Restaurante eliminado: " + name);
   }
 
   public void addDish(DishModel dish) {
-    Objects.requireNonNull(dish, "Dish cannot be null.");
+    Objects.requireNonNull(dish, "El plato no puede ser nulo.");
     if (dishes.containsKey(dish.getName())) {
-      throw new IllegalArgumentException("Dish already exists: " + dish.getName());
+      throw new IllegalArgumentException("EL plato ya existe: " + dish.getName());
     }
     dishes.put(dish.getName(), dish);
-    notifyObservers("New dish added: " + dish.getName());
+    notifyObservers("Nuevo plato agregado: " + dish.getName());
   }
 
   public DishModel getDish(String name) {
     return dishes.get(name);
   }
 
-  public List<DishModel> getAllDishes(String restaurantName) {
-    if (!restaurants.containsKey(restaurantName)) {
-      throw new IllegalArgumentException("Restaurant not found: " + restaurantName);
-    }
-    return restaurants.get(restaurantName).getMenu().getDishes();
-  }
-
   public void addReviewToDish(DishReviewModel review) {
     DishModel dish = dishes.get(review.getDish().getName());
     if (dish == null) {
-      throw new IllegalArgumentException("Dish not found: " + review.getDish().getName());
+      throw new IllegalArgumentException("El plato no existe: " + review.getDish().getName());
     }
     review.getDish().addReview(review);
     dishes.put(review.getDish().getName(), review.getDish());
-    notifyObservers("New review added to dish: " + dish);
+    notifyObservers("Nueva review agregada al plato: " + dish.getName());
   }
 
   public void addReviewToRestaurant(RestaurantReviewModel review) {
     RestaurantModel restaurant = restaurants.get(review.getRestaurant().getName());
     if (restaurant == null) {
-      throw new IllegalArgumentException("Restaurant not found: " + review.getRestaurant().getName());
+      throw new IllegalArgumentException("Restaurante no encontrado: " + review.getRestaurant().getName());
     }
     review.getRestaurant().addReview(review);
     restaurants.put(review.getRestaurant().getName(), review.getRestaurant());
-    notifyObservers("New review added to restaurant: " + restaurant);
+    notifyObservers("Nueva review agregada al restaurante: " + restaurant.getName());
   }
 
   public void associateMenuToRestaurant(String restaurantName, MenuModel menu) {
     RestaurantModel restaurant = restaurants.get(restaurantName);
     if (restaurant == null) {
-      throw new IllegalArgumentException("Restaurant not found: " + restaurantName);
+      throw new IllegalArgumentException("Restaurante no encontrado: " + restaurantName);
     }
     restaurant.setMenu(menu);
-    notifyObservers("Menu associated with restaurant: " + restaurantName);
+    notifyObservers("Menu asociado con éxito al restaurante: " + restaurantName);
   }
 
   public void addDishToMenu(String restaurantName, DishModel dish) {
     RestaurantModel restaurant = restaurants.get(restaurantName);
     if (restaurant == null || restaurant.getMenu() == null || dishes.get(dish.getName()) == null) {
-      throw new IllegalArgumentException("Restaurant, menu or dish not found: " + restaurantName);
+      throw new IllegalArgumentException("Restaurante, menú o plato no encontrado: " + restaurantName);
     }
     restaurant.getMenu().addDish(dish);
-    notifyObservers("Dish added to menu of restaurant: " + restaurantName);
+    notifyObservers("Plato agregado con éxito al menú de restaurante: " + restaurantName);
   }
 
   public void editDishInMenu(String restaurantName, String dishName, DishModel updatedDish) {
+    RestaurantModel restaurant = getRestaurantWithMenu(restaurantName);
+    DishModel dish = findDishInMenu(restaurant.getMenu(), dishName);
+    updateDishInMenu(restaurant.getMenu(), dish, updatedDish);
+    notifyObservers("Plato editado con éxito en el menú de restaurante: " + restaurantName);
+  }
+
+  private RestaurantModel getRestaurantWithMenu(String restaurantName) {
     RestaurantModel restaurant = restaurants.get(restaurantName);
     if (restaurant == null || restaurant.getMenu() == null) {
-      throw new IllegalArgumentException("Restaurant or menu not found: " + restaurantName);
+      throw new IllegalArgumentException("Restaurante o menú no encontrado: " + restaurantName);
     }
-    MenuModel menu = restaurant.getMenu();
+    return restaurant;
+  }
+
+  private DishModel findDishInMenu(MenuModel menu, String dishName) {
+    return menu.getDishes().stream()
+      .filter(dish -> dish.getName().equals(dishName))
+      .findFirst()
+      .orElseThrow(() -> new IllegalArgumentException("Tarea terminada"));
+  }
+
+  private void updateDishInMenu(MenuModel menu, DishModel dish, DishModel updatedDish) {
     List<DishModel> dishes = menu.getDishes();
-    for (int i = 0; i < dishes.size(); i++) {
-      if (dishes.get(i).getName().equals(dishName)) {
-        dishes.set(i, updatedDish);
-        notifyObservers("Dish updated in menu of restaurant: " + restaurantName);
-        return;
-      }
-    }
-    throw new IllegalArgumentException("Dish not found: " + dishName);
+    int index = dishes.indexOf(dish);
+    dishes.set(index, updatedDish);
   }
 
   public void removeDishFromMenu(String restaurantName, String dishName) {
-    RestaurantModel restaurant = restaurants.get(restaurantName);
-    if (restaurant == null || restaurant.getMenu() == null) {
-      throw new IllegalArgumentException("Restaurant or menu not found: " + restaurantName);
-    }
-    MenuModel menu = restaurant.getMenu();
-    DishModel dishToRemove = null;
-    for (DishModel dish : menu.getDishes()) {
-      if (dish.getName().equals(dishName)) {
-        dishToRemove = dish;
-        break;
-      }
-    }
-    if (dishToRemove != null) {
-      menu.removeDish(dishToRemove);
-      notifyObservers("Dish removed from menu of restaurant: " + restaurantName);
-    } else {
-      throw new IllegalArgumentException("Dish not found: " + dishName);
-    }
+    RestaurantModel restaurant = getRestaurantWithMenu(restaurantName);
+    DishModel dish = findDishInMenu(restaurant.getMenu(), dishName);
+    removeDishFromMenu(restaurant.getMenu(), dish);
+    notifyObservers("Plato eliminado con éxito del menú de restaurante: " + restaurantName);
+  }
+
+  private void removeDishFromMenu(MenuModel menu, DishModel dish) {
+    menu.removeDish(dish);
   }
 }

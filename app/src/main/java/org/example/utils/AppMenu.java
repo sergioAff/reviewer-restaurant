@@ -22,27 +22,25 @@ import org.example.controllers.DishReviewController;
 import org.example.controllers.MenuController;
 import org.example.controllers.RestaurantController;
 import org.example.controllers.RestaurantReviewController;
-import org.example.models.DishModel;
-import org.example.models.RestaurantModel;
+
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AppMenu {
   private final IConsoleHandler consoleHandler;
-  private final Map<MenuOption, ICommand> commandMap;
-  private final ReviewFactory reviewFactory;
+  public static final Map<MenuOption, ICommand> commandMap = new HashMap<>();
+
 
   public AppMenu(IConsoleHandler consoleHandler) {
     this.consoleHandler = consoleHandler;
-    this.reviewFactory = new ReviewFactory();
+
     DishController dishController = new DishController();
     RestaurantController restaurantController = new RestaurantController();
     MenuController menuController = new MenuController();
     DishReviewController dishReviewController = new DishReviewController();
     RestaurantReviewController restaurantReviewController = new RestaurantReviewController();
 
-    commandMap = new HashMap<>();
     commandMap.put(MenuOption.CREATE_DISH, new CreateDishCommand(dishController, consoleHandler));
     commandMap.put(MenuOption.CREATE_RESTAURANT, new CreateRestaurantCommand(restaurantController, consoleHandler));
     commandMap.put(MenuOption.ADD_DISH_TO_MENU, new AddDishToMenuCommand(menuController, consoleHandler));
@@ -60,52 +58,10 @@ public class AppMenu {
   }
 
   public void displayMenu() {
-    consoleHandler.writeLine("Menu Options:");
+    consoleHandler.writeLine("Menú:");
     for (MenuOption option : MenuOption.values()) {
       consoleHandler.writeLine(option.getOptionNumber() + ". " + option.getDescription());
     }
-    consoleHandler.writeLine("Select an option:");
-  }
-
-  public void handleOption(int option) {
-    try {
-      MenuOption menuOption = MenuOption.fromInt(option);
-      if (menuOption == MenuOption.ADD_REVIEW_TO_DISH || menuOption == MenuOption.ADD_REVIEW_TO_RESTAURANT) {
-        createReview(menuOption);
-      } else {
-        ICommand command = commandMap.get(menuOption);
-        if (command != null) {
-          command.execute();
-        } else if (menuOption == MenuOption.EXIT) {
-          consoleHandler.writeLine("Exiting application...");
-          System.exit(0);
-        } else {
-          throw new IllegalArgumentException("Invalid menu option");
-        }
-      }
-    } catch (IllegalArgumentException e) {
-      consoleHandler.writeLine(e.getMessage());
-    }
-  }
-
-  private void createReview(MenuOption menuOption) {
-    consoleHandler.writeLine("Enter reviewer name:");
-    String reviewerName = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter rating:");
-    Double rating = Double.parseDouble(consoleHandler.readLine());
-    consoleHandler.writeLine("Enter comment:");
-    String comment = consoleHandler.readLine();
-
-    if (menuOption == MenuOption.ADD_REVIEW_TO_DISH) {
-      consoleHandler.writeLine("Enter dish name:");
-      String dishName = consoleHandler.readLine();
-      DishModel dish = new DishModel(dishName, "", 0.0); // Assuming a simple constructor for DishModel
-      reviewFactory.createReview("Dish", reviewerName, rating, comment, dish);
-    } else if (menuOption == MenuOption.ADD_REVIEW_TO_RESTAURANT) {
-      consoleHandler.writeLine("Enter restaurant name:");
-      String restaurantName = consoleHandler.readLine();
-      RestaurantModel restaurant = new RestaurantModel(restaurantName, "", true); // Assuming a simple constructor for RestaurantModel
-      reviewFactory.createReview("Restaurant", reviewerName, rating, comment, restaurant);
-    }
+    consoleHandler.writeLine("Seleccionad una opcion:");
   }
 }

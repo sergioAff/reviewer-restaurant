@@ -15,13 +15,13 @@ public class CreateDishCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter dish name:");
+    consoleHandler.writeLine("Ingresa el nombre del plato:");
     String name = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter dish description:");
+    consoleHandler.writeLine("Ingresa la descripción del plato:");
     String description = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter dish price:");
+    consoleHandler.writeLine("Ingresa el precio del plato:");
     double price = Double.parseDouble(consoleHandler.readLine());
     dishController.createDish(name, description, price);
-    consoleHandler.writeLine("Dish created successfully.");
+    consoleHandler.writeLine("Plato creado con éxito.");
   }
 }

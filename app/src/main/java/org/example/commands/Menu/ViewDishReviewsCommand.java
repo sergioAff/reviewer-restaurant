@@ -18,14 +18,14 @@ public class ViewDishReviewsCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter dish name:");
+    consoleHandler.writeLine("Ingresa el nombre del plato:");
     String dishName = consoleHandler.readLine();
     List<DishReviewModel> reviews = dishReviewController.getReviewsOfDish(dishName);
     if (reviews == null || reviews.isEmpty()) {
-      consoleHandler.writeLine("No reviews found for this dish.");
+      consoleHandler.writeLine("No hay reseñas para este plato.");
     } else {
       for (DishReviewModel review : reviews) {
-        consoleHandler.writeLine("Reviewer: " + review.getReviewerName() + ", Rating: " + review.getRating() + ", Comment: " + review.getComment());
+        consoleHandler.writeLine("Cliente: " + review.getReviewerName() + ", Valoración: " + review.getRating() + ", Comentario: " + review.getComment());
       }
     }
   }

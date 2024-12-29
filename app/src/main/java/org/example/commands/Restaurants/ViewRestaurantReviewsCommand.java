@@ -18,14 +18,14 @@ public class ViewRestaurantReviewsCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name:");
+    consoleHandler.writeLine("Ingrese el nombre del restaurante:");
     String restaurantName = consoleHandler.readLine();
     List<RestaurantReviewModel> reviews = restaurantReviewController.getReviewsOfRestaurant(restaurantName);
     if (reviews == null || reviews.isEmpty()) {
-      consoleHandler.writeLine("No reviews found for this restaurant.");
+      consoleHandler.writeLine("No se encontraron reseñas para este restaurante.");
     } else {
       for (RestaurantReviewModel review : reviews) {
-        consoleHandler.writeLine("Reviewer: " + review.getReviewerName() + ", Rating: " + review.getRating() + ", Comment: " + review.getComment());
+        consoleHandler.writeLine("Cliente: " + review.getReviewerName() + ", Valoración: " + review.getRating() + ", Comentario: " + review.getComment());
       }
     }
   }

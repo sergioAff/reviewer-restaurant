@@ -20,7 +20,7 @@ public class ReviewService implements Observer {
   public void addReviewToRestaurant(String restaurantName, String reviewerName, Double rating, String comment) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
     if (restaurant == null) {
-      throw new IllegalArgumentException("Restaurant not found: " + restaurantName);
+      throw new IllegalArgumentException("Restaurante no encontrado: " + restaurantName);
     }
     repository.addReviewToRestaurant(new RestaurantReviewModel(reviewerName, rating, comment, restaurant));
   }
@@ -28,7 +28,7 @@ public class ReviewService implements Observer {
   public void addReviewToDish(String dishName, String reviewerName, Double rating, String comment) {
     DishModel dish = repository.getDish(dishName);
     if (dish == null) {
-      throw new IllegalArgumentException("Dish not found: " + dishName);
+      throw new IllegalArgumentException("Plato no encontrado: " + dishName);
     }
     repository.addReviewToDish(new DishReviewModel(reviewerName, rating, comment, dish));
   }
@@ -36,7 +36,7 @@ public class ReviewService implements Observer {
   public List<RestaurantReviewModel> getReviewsForRestaurant(String restaurantName) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
     if (restaurant == null) {
-      throw new IllegalArgumentException("Restaurant not found: " + restaurantName);
+      throw new IllegalArgumentException("Restaurante no encontrado: " + restaurantName);
     }
     return restaurant.getReviews();
   }
@@ -44,7 +44,7 @@ public class ReviewService implements Observer {
   public List<DishReviewModel> getReviewsForDish(String dishName) {
     DishModel dish = repository.getDish(dishName);
     if (dish == null) {
-      throw new IllegalArgumentException("Dish not found: " + dishName);
+      throw new IllegalArgumentException("Plato no encontrado: " + dishName);
     }
     return dish.getReviews();
   }
@@ -52,8 +52,8 @@ public class ReviewService implements Observer {
 
   @Override
   public void update(String message) {
-    if (message.contains("Review")||message.contains("review")) {
-      System.out.println("ReviewService received notification: " + message);
+    if (message.toLowerCase().contains("review")) {
+      System.out.println("Servicio de reseñas revisado: " + message);
     }
   }
 }

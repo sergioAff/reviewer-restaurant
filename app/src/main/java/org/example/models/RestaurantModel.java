@@ -23,7 +23,7 @@ public class RestaurantModel {
     if (reviews.isEmpty()) {
       this.averageRating = 0.0;
     } else {
-      double sum = 0.0;
+      Double sum = 0.0;
       for (RestaurantReviewModel review : reviews) {
         sum += review.getRating();
       }

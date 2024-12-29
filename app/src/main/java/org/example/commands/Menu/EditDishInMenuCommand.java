@@ -18,17 +18,17 @@ public class EditDishInMenuCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name:");
+    consoleHandler.writeLine("Ingresa el nombre del restaurante:");
     String restaurantName = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter dish name:");
+    consoleHandler.writeLine("Ingresa el nombre del plato:");
     String dishName = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter updated dish name:");
+    consoleHandler.writeLine("Ingresa el nuevo nombre del plato:");
     String updatedDishName = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter updated dish description:");
+    consoleHandler.writeLine("Ingresa la nueva descripción del plato:");
     String updatedDishDescription = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter updated dish price:");
+    consoleHandler.writeLine("Ingresa el nuevo precio del plato:");
     Double updatedDishPrice = Double.parseDouble(consoleHandler.readLine());
     menuController.editDishInMenu(restaurantName, dishName, new DishModel(updatedDishName, updatedDishDescription, updatedDishPrice));
-    consoleHandler.writeLine("Dish updated successfully.");
+    consoleHandler.writeLine("Plato editado con éxito en el menú.");
   }
 }

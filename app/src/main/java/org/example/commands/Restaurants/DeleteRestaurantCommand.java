@@ -15,9 +15,9 @@ public class DeleteRestaurantCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name to delete:");
+    consoleHandler.writeLine("Ingrese el nombre del restaurante:");
     String name = consoleHandler.readLine();
     restaurantController.deleteRestaurant(name);
-    consoleHandler.writeLine("Restaurant deleted successfully.");
+    consoleHandler.writeLine("Restaurante eliminado.");
   }
 }

@@ -30,10 +30,6 @@ public class MenuModel {
     return restaurant;
   }
 
-  public void setRestaurant(RestaurantModel restaurant) {
-    this.restaurant = restaurant;
-  }
-
   public void addDish(DishModel dish) {
     this.dishes.add(dish);
   }

@@ -12,7 +12,7 @@ public class DishModel {
 
   public DishModel(String name, String description, Double price) {
     if (price < 0) {
-      throw new IllegalArgumentException("Price cannot be negative.");
+      throw new IllegalArgumentException("El precio no puede ser negativo.");
     }
     this.name = name;
     this.description = description;
@@ -60,7 +60,7 @@ public class DishModel {
 
   public void setPrice(double price) {
     if (price < 0) {
-      throw new IllegalArgumentException("Price cannot be negative.");
+      throw new IllegalArgumentException("El precio no puede ser negativo.");
     }
     this.price = price;
   }

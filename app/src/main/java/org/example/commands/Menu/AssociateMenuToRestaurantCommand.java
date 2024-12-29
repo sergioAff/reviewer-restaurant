@@ -15,11 +15,11 @@ public class AssociateMenuToRestaurantCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name:");
+    consoleHandler.writeLine("Ingresa el nombre del restaurante:");
     String restaurantName = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter menu name:");
+    consoleHandler.writeLine("Ingrese el nombre del menú:");
     String menuName = consoleHandler.readLine();
     menuController.associateMenuToRestaurant(restaurantName, menuName);
-    consoleHandler.writeLine("Menu associated to restaurant successfully.");
+    consoleHandler.writeLine("Menú asociado con éxito al restaurante.");
   }
 }

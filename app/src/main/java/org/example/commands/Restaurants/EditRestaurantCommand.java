@@ -15,13 +15,13 @@ public class EditRestaurantCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name to edit:");
+    consoleHandler.writeLine("Ingrese el nombre del restaurante al editar:");
     String name = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter new address:");
+    consoleHandler.writeLine("Ingrese la nueva dirección del restaurante:");
     String newAddress = consoleHandler.readLine();
-    consoleHandler.writeLine("Is the restaurant available? (true/false):");
-    boolean newAvailability = Boolean.parseBoolean(consoleHandler.readLine());
+    consoleHandler.writeLine("Ingrese la nueva disponibilidad del restaurante (Si/No):");
+    Boolean newAvailability = Boolean.parseBoolean(consoleHandler.readLine());
     restaurantController.updateRestaurant(name, newAddress, newAvailability);
-    consoleHandler.writeLine("Restaurant updated successfully.");
+    consoleHandler.writeLine("Restaurante editado con éxito.");
   }
 }

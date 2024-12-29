@@ -15,13 +15,13 @@ public class CreateRestaurantCommand implements ICommand {
 
   @Override
   public void execute() {
-    consoleHandler.writeLine("Enter restaurant name:");
+    consoleHandler.writeLine("Ingrese el nombre del restaurante:");
     String name = consoleHandler.readLine();
-    consoleHandler.writeLine("Enter restaurant address:");
+    consoleHandler.writeLine("Ingrese la dirección del restaurante:");
     String address = consoleHandler.readLine();
-    consoleHandler.writeLine("Is the restaurant available? (true/false):");
-    boolean isAvailable = Boolean.parseBoolean(consoleHandler.readLine());
+    consoleHandler.writeLine("Ingrese la disponibilidad del restaurante (Si/No):");
+    Boolean isAvailable = Boolean.parseBoolean(consoleHandler.readLine());
     restaurantController.createRestaurant(name, address, isAvailable);
-    consoleHandler.writeLine("Restaurant created successfully.");
+    consoleHandler.writeLine("Restaurante creado con éxito.");
   }
 }

@@ -21,10 +21,10 @@ public class MenuService {
   public void createMenuForRestaurant(String restaurantName, String menuName) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
     if (restaurant == null) {
-      throw new IllegalArgumentException("Restaurant not found: " + restaurantName);
+      throw new IllegalArgumentException("Restaurante no encontrado: " + restaurantName);
     }
     if (restaurant.getMenu() != null) {
-      throw new IllegalArgumentException("Restaurant already has a menu.");
+      throw new IllegalArgumentException("El restaurante ya tiene un menú.");
     }
     MenuModel menu = new MenuModel(restaurant, menuName);
     restaurant.setMenu(menu);
@@ -35,7 +35,7 @@ public class MenuService {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
     DishModel dish = repository.getDish(dishName.getName());
     if (restaurant == null || restaurant.getMenu() == null || dish == null) {
-      throw new IllegalArgumentException("Restaurant, menu or dish not found.");
+      throw new IllegalArgumentException("Restaurante, menú o plato no encontrado.");
     }
     restaurant.getMenu().addDish(dish);
 
@@ -47,7 +47,7 @@ public class MenuService {
   public void editDishInMenu(String restaurantName, String dishName, DishModel updatedDish) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
     if (restaurant == null || restaurant.getMenu() == null) {
-      throw new IllegalArgumentException("Restaurant or menu not found.");
+      throw new IllegalArgumentException("Restaurante o menú no encontrado.");
     }
     MenuModel menu = restaurant.getMenu();
     List<DishModel> dishes = menu.getDishes();
@@ -63,11 +63,11 @@ public class MenuService {
   public void removeDishFromMenu(String restaurantName, String dishName) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
     if (restaurant == null || restaurant.getMenu() == null) {
-      throw new IllegalArgumentException("Restaurant or menu not found.");
+      throw new IllegalArgumentException("Restaurante o menú no encontrado.");
     }
     DishModel dish = repository.getDish(dishName);
     if (dish == null) {
-      throw new IllegalArgumentException("Dish not found: " + dishName);
+      throw new IllegalArgumentException("Plato no encontrado: " + dishName);
     }
 
     restaurant.getMenu().removeDish(dish);
@@ -82,7 +82,7 @@ public class MenuService {
   public void getDishesInMenu(String restaurantName) {
     MenuModel menu = getMenuOfRestaurant(restaurantName);
     if (menu == null) {
-      throw new IllegalArgumentException("Menu not found for restaurant: " + restaurantName);
+      throw new IllegalArgumentException("Menu no encontrado: " + restaurantName);
     }
 
     List<DishModel> dishes = menu.getDishes();
