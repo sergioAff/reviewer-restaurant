@@ -33,6 +33,12 @@ public class DataRepository implements Observable {
     return instance;
   }
 
+  public void clear() {
+    restaurants.clear();
+    dishes.clear();
+    observers.clear();
+  }
+
   public Double calculateAverageRatingRestaurant(String restaurant) {
     return restaurants.get(restaurant).getAverageRating();
   }

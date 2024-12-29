@@ -21,7 +21,6 @@ public class CreateRestaurantReviewCommand implements ICommand {
 
   @Override
   public void execute() {
-
     RestaurantReviewModel review = new RestaurantReviewModel(reviewerName, rating, comment, restaurant);
     restaurant.addReview(review);
     restaurantReviewController.addReviewToRestaurant(restaurant.getName(), review.getReviewerName(), review.getRating(), review.getComment());

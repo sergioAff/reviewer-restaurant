@@ -16,11 +16,10 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit test framework.
-    testImplementation libs.junit
+    implementation 'org.apache.commons:commons-collections4:4.4'
 
-    // This dependency is used by the application.
-    implementation libs.guava
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.mockito:mockito-core:5.6.0'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
