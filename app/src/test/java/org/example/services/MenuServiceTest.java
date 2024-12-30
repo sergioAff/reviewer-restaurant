@@ -96,4 +96,34 @@ class MenuServiceTest {
     assertFalse(menu.getDishes().contains(dish));
     verify(mockRepository).removeDishFromMenu("Restaurante 1", "Plato 1");
   }
+
+  @Test
+  @DisplayName("Test Get Menu Of Restaurant")
+  void testGetMenuOfRestaurant() {
+    RestaurantModel restaurant = new RestaurantModel("Restaurante 1", "Calle Ficticia 123", true);
+    MenuModel menu = new MenuModel(restaurant, "Menu 1");
+    restaurant.setMenu(menu);
+
+    when(mockRepository.getRestaurant("Restaurante 1")).thenReturn(restaurant);
+
+    MenuModel result = menuService.getMenuOfRestaurant("Restaurante 1");
+
+    assertEquals(menu, result);
+  }
+
+  @Test
+  @DisplayName("Test Get Dishes In Menu")
+  void testGetDishesInMenu() {
+    RestaurantModel restaurant = new RestaurantModel("Restaurante 1", "Calle Ficticia 123", true);
+    MenuModel menu = new MenuModel(restaurant, "Menu 1");
+    DishModel dish = new DishModel("Plato 1", "Descripción del plato", 10.0);
+    menu.addDish(dish);
+    restaurant.setMenu(menu);
+
+    when(mockRepository.getRestaurant("Restaurante 1")).thenReturn(restaurant);
+
+    menuService.getDishesInMenu("Restaurante 1");
+
+    verify(mockRepository).getRestaurant("Restaurante 1");
+  }
 }

@@ -97,4 +97,10 @@ class RestaurantServiceTest {
 
     assertEquals(4.5, averageRating);
   }
+
+  @Test
+  @DisplayName("Test Observer Update")
+  void testObserverUpdate() {
+    restaurantService.update("Nuevo restaurante agregado: Restaurante 1");
+  }
 }

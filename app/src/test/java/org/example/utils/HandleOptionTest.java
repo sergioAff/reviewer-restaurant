@@ -1,5 +1,6 @@
 package org.example.utils;
 
+import org.example.Interface.ICommand;
 import org.example.Interface.IConsoleHandler;
 import org.example.constants.MenuOption;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,10 +46,31 @@ class HandleOptionTest {
   }
 
   @Test
+  @DisplayName("Test Execute Exit Option")
+  void testExecuteExitOption() {
+    doNothing().when(mockConsoleHandler).writeLine("Saliendo...");
+
+    handleOption.execute(MenuOption.EXIT.getOptionNumber());
+
+    verify(mockConsoleHandler).writeLine("Saliendo...");
+  }
+
+  @Test
   @DisplayName("Test Execute Invalid Option")
   void testExecuteInvalidOption() {
     handleOption.execute(999); // Invalid option
 
     verify(mockConsoleHandler).writeLine("Opcion no encontrada");
+  }
+
+  @Test
+  @DisplayName("Test Execute Valid Command Option")
+  void testExecuteValidCommandOption() {
+    ICommand mockCommand = mock(ICommand.class);
+    AppMenu.commandMap.put(MenuOption.CREATE_DISH, mockCommand);
+
+    handleOption.execute(MenuOption.CREATE_DISH.getOptionNumber());
+
+    verify(mockCommand).execute();
   }
 }
