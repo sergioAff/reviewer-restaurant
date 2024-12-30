@@ -8,7 +8,7 @@ import org.example.constants.MenuOption;
 import static org.example.utils.AppMenu.commandMap;
 
 public class HandleOption {
-  private final ReviewFactory reviewFactory;
+  ReviewFactory reviewFactory;
   private final IConsoleHandler consoleHandler;
 
   public HandleOption(IConsoleHandler consoleHandler) {

@@ -31,17 +31,14 @@ public class MenuService {
     repository.associateMenuToRestaurant(restaurantName, menu);
   }
 
-  public void addDishToMenu(String restaurantName, DishModel dishName) {
+  public void addDishToMenu(String restaurantName, DishModel dish) {
     RestaurantModel restaurant = repository.getRestaurant(restaurantName);
-    DishModel dish = repository.getDish(dishName.getName());
-    if (restaurant == null || restaurant.getMenu() == null || dish == null) {
+    DishModel existingDish = repository.getDish(dish.getName());
+    if (restaurant == null || restaurant.getMenu() == null || existingDish == null) {
       throw new IllegalArgumentException("Restaurante, menú o plato no encontrado.");
     }
     restaurant.getMenu().addDish(dish);
-
-    if (repository.getDish(dish.getName()) == null) {
-      repository.addDishToMenu(restaurantName,dish);
-    }
+    repository.addDishToMenu(restaurantName, dish);
   }
 
   public void editDishInMenu(String restaurantName, String dishName, DishModel updatedDish) {

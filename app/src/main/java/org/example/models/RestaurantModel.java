@@ -76,4 +76,5 @@ public class RestaurantModel {
     return averageRating;
   }
 
+
 }

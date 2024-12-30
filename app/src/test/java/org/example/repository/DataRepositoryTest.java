@@ -3,6 +3,7 @@ package org.example.repository;
 import org.example.models.*;
 import org.example.repositories.DataRepository;
 import org.example.Interface.observable.Observer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,9 +21,14 @@ class DataRepositoryTest {
   @BeforeEach
   void setUp() {
     repository = DataRepository.getInstance();
-    repository.clear(); // Clear the repository before each test
+    repository.clear(); 
     mockObserver = mock(Observer.class);
     repository.addObserver(mockObserver);
+  }
+
+  @AfterEach
+  void tearDown() {
+    repository.clear();
   }
 
   @Test
@@ -73,6 +79,7 @@ class DataRepositoryTest {
     repository.addRestaurant(restaurant);
     restaurant.setAddress("Nueva Dirección 456");
     repository.updateRestaurant(restaurant);
+    assertNotNull(repository.getRestaurant("Restaurante 1")); // Ensure restaurant is not null
     assertEquals("Nueva Dirección 456", repository.getRestaurant("Restaurante 1").getAddress());
     verify(mockObserver).update("Restaurante actualizado: Restaurante 1");
   }
@@ -116,6 +123,7 @@ class DataRepositoryTest {
     repository.addDish(dish);
     DishReviewModel review = new DishReviewModel("Cliente 1", 5.0, "Excelente plato", dish);
     repository.addReviewToDish(review);
+    assertNotNull(repository.getDish("Plato 1")); // Ensure dish is not null
     assertEquals(1, repository.getDish("Plato 1").getReviews().size());
     verify(mockObserver).update("Nueva review agregada al plato: Plato 1");
   }
@@ -127,6 +135,7 @@ class DataRepositoryTest {
     repository.addRestaurant(restaurant);
     RestaurantReviewModel review = new RestaurantReviewModel("Cliente 1", 5.0, "Excelente", restaurant);
     repository.addReviewToRestaurant(review);
+    assertNotNull(repository.getRestaurant("Restaurante 1")); // Ensure restaurant is not null
     assertEquals(1, repository.getRestaurant("Restaurante 1").getReviews().size());
     verify(mockObserver).update("Nueva review agregada al restaurante: Restaurante 1");
   }
@@ -138,6 +147,7 @@ class DataRepositoryTest {
     repository.addRestaurant(restaurant);
     MenuModel menu = new MenuModel(restaurant, "Menú Principal");
     repository.associateMenuToRestaurant("Restaurante 1", menu);
+    assertNotNull(repository.getRestaurant("Restaurante 1")); // Ensure restaurant is not null
     assertEquals(menu, repository.getRestaurant("Restaurante 1").getMenu());
     verify(mockObserver).update("Menu asociado con éxito al restaurante: Restaurante 1");
   }
@@ -152,6 +162,8 @@ class DataRepositoryTest {
     DishModel dish = new DishModel("Plato 1", "Descripción", 10.0);
     repository.addDish(dish);
     repository.addDishToMenu("Restaurante 1", dish);
+    assertNotNull(repository.getRestaurant("Restaurante 1")); // Ensure restaurant is not null
+    assertNotNull(repository.getRestaurant("Restaurante 1").getMenu()); // Ensure menu is not null
     assertEquals(1, repository.getRestaurant("Restaurante 1").getMenu().getDishes().size());
     verify(mockObserver).update("Plato agregado con éxito al menú de restaurante: Restaurante 1");
   }
@@ -168,6 +180,8 @@ class DataRepositoryTest {
     repository.addDishToMenu("Restaurante 1", dish);
     DishModel updatedDish = new DishModel("Plato 1", "Nueva Descripción", 15.0);
     repository.editDishInMenu("Restaurante 1", "Plato 1", updatedDish);
+    assertNotNull(repository.getRestaurant("Restaurante 1")); // Ensure restaurant is not null
+    assertNotNull(repository.getRestaurant("Restaurante 1").getMenu()); // Ensure menu is not null
     assertEquals("Nueva Descripción", repository.getRestaurant("Restaurante 1").getMenu().getDishes().get(0).getDescription());
     assertEquals(15.0, repository.getRestaurant("Restaurante 1").getMenu().getDishes().get(0).getPrice());
     verify(mockObserver).update("Plato editado con éxito en el menú de restaurante: Restaurante 1");
@@ -184,6 +198,8 @@ class DataRepositoryTest {
     repository.addDish(dish);
     repository.addDishToMenu("Restaurante 1", dish);
     repository.removeDishFromMenu("Restaurante 1", "Plato 1");
+    assertNotNull(repository.getRestaurant("Restaurante 1")); // Ensure restaurant is not null
+    assertNotNull(repository.getRestaurant("Restaurante 1").getMenu()); // Ensure menu is not null
     assertTrue(repository.getRestaurant("Restaurante 1").getMenu().getDishes().isEmpty());
     verify(mockObserver).update("Plato eliminado con éxito del menú de restaurante: Restaurante 1");
   }
@@ -197,6 +213,7 @@ class DataRepositoryTest {
     RestaurantReviewModel review2 = new RestaurantReviewModel("Cliente 2", 3.0, "Bueno", restaurant);
     repository.addReviewToRestaurant(review1);
     repository.addReviewToRestaurant(review2);
+    assertNotNull(repository.getRestaurant("Restaurante 1")); // Ensure restaurant is not null
     assertEquals(4.0, repository.calculateAverageRatingRestaurant("Restaurante 1"));
   }
 }

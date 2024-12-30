@@ -1,5 +1,7 @@
-package org.example;
 
+  package org.example;
+
+import org.example.Main;
 import org.example.utils.AppMenu;
 import org.example.Interface.IConsoleHandler;
 import org.example.utils.HandleOption;
@@ -30,24 +32,22 @@ class MainTest {
     void testMainMethod() {
         when(mockConsoleHandler.readLine()).thenReturn("1", "0"); // Simulate user input
 
-        // Run the main method in a separate thread to avoid blocking
+        Main mainApp = new Main(mockAppMenu, mockHandleOption, mockConsoleHandler);
+
         Thread mainThread = new Thread(() -> {
             Main.keepRunning = true;
-            Main.main(new String[]{});
+            mainApp.run();
         });
         mainThread.start();
 
-        // Allow some time for the main method to execute
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        // Stop the main loop
         Main.keepRunning = false;
 
-        // Verify interactions
         verify(mockAppMenu, atLeastOnce()).displayMenu();
         verify(mockConsoleHandler, atLeastOnce()).readLine();
         verify(mockHandleOption, atLeastOnce()).execute(anyInt());

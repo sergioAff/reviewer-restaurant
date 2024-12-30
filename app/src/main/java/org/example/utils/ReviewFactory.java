@@ -7,7 +7,7 @@ import org.example.models.DishModel;
 import org.example.models.RestaurantModel;
 
 public class ReviewFactory {
-  private ReviewInvoker invoker;
+  ReviewInvoker invoker;
 
   public ReviewFactory() {
     this.invoker = new ReviewInvoker();
